@@ -1,0 +1,27 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Fortran module files
+*.mod
+*.smod
+
+# Visual studio files
+*.vcxproj.user
+*.VC.db
+*.VC.opendb
+*.ipch
+*.suo
+
+# Dirs
+Debug/
+Release/
