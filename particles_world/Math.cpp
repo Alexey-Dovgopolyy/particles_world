@@ -25,13 +25,16 @@ float Math::vectorLength(const sf::Vector2f& vec)
 
 sf::Vector2f Math::normalize(const sf::Vector2f& vec)
 {
-    sf::Vector2f result;
-
-    float vecLength = vectorLength(vec);
-    result.x = vec.x / vecLength;
-    result.y = vec.y / vecLength;
-
+    sf::Vector2f result(vec);
+    normalizeThis(result);
     return result;
+}
+
+void Math::normalizeThis(sf::Vector2f& vec)
+{
+    float vecLength = vectorLength(vec);
+    vec.x = vec.x / vecLength;
+    vec.y = vec.y / vecLength;
 }
 
 float Math::distanceFromPointToSegment(const sf::Vector2f& point, const sf::Vector2f& segmentP1, const sf::Vector2f& segmentP2)

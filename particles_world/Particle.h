@@ -19,7 +19,7 @@ public:
     void setSpeed(float speed);
     float getSpeed() const;
 
-    void setDirection(sf::Vector2f direction);
+    void setDirection(const sf::Vector2f& direction);
     const sf::Vector2f& getDirection() const;
 
     void applyForce(const Force& force);

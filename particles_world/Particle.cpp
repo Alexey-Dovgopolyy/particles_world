@@ -1,5 +1,6 @@
 #include "Particle.h"
 #include "ServiceProvider.h"
+#include "Math.h"
 
 Particle::Particle()
 {
@@ -22,7 +23,6 @@ float Particle::getRadius() const
 
 void Particle::setPosition(const sf::Vector2f& position)
 {
-    mCircle.setPosition(position);
     mPosition = position;
 }
 
@@ -33,34 +33,46 @@ const sf::Vector2f& Particle::getPosition() const
 
 void Particle::setSpeed(float speed)
 {
+    mSpeed = speed;
 }
 
 float Particle::getSpeed() const
 {
-    return 0.0f;
+    return mSpeed;
 }
 
-void Particle::setDirection(sf::Vector2f direction)
+void Particle::setDirection(const sf::Vector2f& direction)
 {
+    mDirection = direction;
+    Math::normalizeThis(mDirection);
 }
 
 const sf::Vector2f& Particle::getDirection() const
 {
-    return sf::Vector2f();
+    return mDirection;
 }
 
 void Particle::applyForce(const Force& force)
 {
-
+    setSpeed(force.amount);
+    setDirection(force.direction);
 }
 
 void Particle::update(float dt)
 {
+    sf::Vector2f offset;
+
+    offset = mDirection * (mSpeed * dt);
+
+    const sf::Vector2f currentPos = getPosition();
+    sf::Vector2f newPos = currentPos + offset;
+    setPosition(newPos);
 }
 
 void Particle::draw()
 {
     sf::RenderWindow* window = ServiceProvider::getWindowProvider()->getWindow();
 
+    mCircle.setPosition(mPosition);
     window->draw(mCircle);
 }
