@@ -39,8 +39,12 @@ sf::Vector2f Math::normalize(const sf::Vector2f& vec)
 void Math::normalizeThis(sf::Vector2f& vec)
 {
     float vecLength = vectorLength(vec);
-    vec.x = vec.x / vecLength;
-    vec.y = vec.y / vecLength;
+
+    if (vecLength > 0.f)
+    {
+        vec.x = vec.x / vecLength;
+        vec.y = vec.y / vecLength;
+    }
 }
 
 float Math::distanceFromPointToSegment(const sf::Vector2f& point, const sf::Vector2f& segmentP1, const sf::Vector2f& segmentP2)
