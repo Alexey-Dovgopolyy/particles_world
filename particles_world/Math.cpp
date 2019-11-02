@@ -23,6 +23,12 @@ float Math::vectorLength(const sf::Vector2f& vec)
     return result;
 }
 
+float Math::vectorLengthQuad(const sf::Vector2f& vec)
+{
+    float result = (std::pow(vec.x, 2) + std::pow(vec.y, 2));
+    return result;
+}
+
 sf::Vector2f Math::normalize(const sf::Vector2f& vec)
 {
     sf::Vector2f result(vec);

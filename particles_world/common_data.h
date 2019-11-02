@@ -1,3 +1,4 @@
 #pragma once
 
-float gGravitationRadius = 40.f;
+float gAttractionRadius = 100.f;
+float gAttractionCoef = 0.5f;

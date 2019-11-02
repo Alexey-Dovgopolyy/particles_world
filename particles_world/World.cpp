@@ -1,4 +1,6 @@
 #include "World.h"
+#include "Math.h"
+#include "common_data.h"
 
 World::World()
 {
@@ -10,13 +12,8 @@ World::~World()
 
 void World::init()
 {
-    Force f1;
-    f1.direction = sf::Vector2f(1.f, 0.f);
-    f1.amount = 50.f;
-
-    Force f2;
-    f2.direction = sf::Vector2f(-1.f, 0.f);
-    f2.amount = 50.f;
+    Force f1(sf::Vector2f(1.f, 0.f), 180.f);
+    Force f2(sf::Vector2f(-1.f, 0.f), 80.f);
 
     Particle p1;
     p1.setPosition(sf::Vector2f(100.f, 270.f));
@@ -34,6 +31,28 @@ void World::init()
 
 void World::update(float dt)
 {
+    Particle& particle1 = mParticles[0];
+    Particle& particle2 = mParticles[1];
+
+    const sf::Vector2f& particlePos1 = particle1.getPosition();
+    const sf::Vector2f& particlePos2 = particle2.getPosition();
+
+    sf::Vector2f attractDir = particlePos2 - particlePos1;
+    float distance = Math::vectorLength(attractDir);
+
+    if (distance < gAttractionRadius)
+    {
+        float attractionForceAmount = gAttractionRadius - distance;
+        attractionForceAmount *= gAttractionCoef;
+
+        Force attractionForce(attractDir, attractionForceAmount);
+
+        particle1.applyForce(attractionForce);
+
+        attractionForce.setDirection(-1.f * attractDir);
+        particle2.applyForce(attractionForce);
+    }
+
     for (Particle& particle : mParticles)
     {
         particle.update(dt);

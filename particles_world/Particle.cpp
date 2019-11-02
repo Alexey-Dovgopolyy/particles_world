@@ -54,8 +54,15 @@ const sf::Vector2f& Particle::getDirection() const
 
 void Particle::applyForce(const Force& force)
 {
-    setSpeed(force.amount);
-    setDirection(force.direction);
+    sf::Vector2f moveVector = mDirection * mSpeed;
+    const sf::Vector2f& forceVector = force.getForceVector();
+
+    sf::Vector2f newVector = moveVector + forceVector;
+
+    float newAmount = Math::vectorLength(newVector);
+
+    setSpeed(newAmount);
+    setDirection(newVector);
 }
 
 void Particle::update(float dt)
