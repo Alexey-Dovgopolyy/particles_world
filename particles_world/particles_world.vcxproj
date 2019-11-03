@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConfigReader.cpp" />
     <ClCompile Include="Force.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Particle.cpp" />
@@ -167,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common_data.h" />
+    <ClInclude Include="ConfigReader.h" />
     <ClInclude Include="Force.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Particle.h" />

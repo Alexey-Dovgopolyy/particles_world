@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFML/Graphics/CircleShape.hpp"
+#include "SFML/Graphics/Color.hpp"
 
 #include "Force.h"
 
@@ -22,7 +23,12 @@ public:
     void setDirection(const sf::Vector2f& direction);
     const sf::Vector2f& getDirection() const;
 
+    void setColor(sf::Color color);
+
+    sf::Vector2f getMoveVector() const;
+
     void applyForce(const Force& force);
+    void moveBy(const sf::Vector2f& move);
 
     void update(float dt);
     void draw();

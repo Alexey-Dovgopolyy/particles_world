@@ -8,6 +8,7 @@
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="WindowProvider.cpp" />
     <ClCompile Include="World.cpp" />
+    <ClCompile Include="ConfigReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Particle.h" />
@@ -17,5 +18,6 @@
     <ClInclude Include="Math.h" />
     <ClInclude Include="WindowProvider.h" />
     <ClInclude Include="World.h" />
+    <ClInclude Include="ConfigReader.h" />
   </ItemGroup>
 </Project>

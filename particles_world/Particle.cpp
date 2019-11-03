@@ -52,6 +52,18 @@ const sf::Vector2f& Particle::getDirection() const
     return mDirection;
 }
 
+void Particle::setColor(sf::Color color)
+{
+    mCircle.setFillColor(color);
+}
+
+sf::Vector2f Particle::getMoveVector() const
+{
+    sf::Vector2f moveVector;
+    moveVector = mDirection * mSpeed;
+    return moveVector;
+}
+
 void Particle::applyForce(const Force& force)
 {
     sf::Vector2f moveVector = mDirection * mSpeed;
@@ -63,6 +75,12 @@ void Particle::applyForce(const Force& force)
 
     setSpeed(newAmount);
     setDirection(newVector);
+}
+
+void Particle::moveBy(const sf::Vector2f& move)
+{
+    mPosition += move;
+    mCircle.setPosition(mPosition);
 }
 
 void Particle::update(float dt)
