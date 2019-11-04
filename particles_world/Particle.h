@@ -25,6 +25,7 @@ public:
 
     void setColor(sf::Color color);
 
+    void setMoveVector(const sf::Vector2f& moveVector);
     sf::Vector2f getMoveVector() const;
 
     void applyForce(const Force& force);

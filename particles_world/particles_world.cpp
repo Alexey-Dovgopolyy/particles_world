@@ -5,7 +5,7 @@
 #include "ServiceProvider.h"
 #include "World.h"
 
-sf::Time sTimePerFrame = sf::seconds(1.f / 60.f);
+sf::Time sTimePerFrame = sf::seconds(1.f / 90.f);
 
 int main()
 {

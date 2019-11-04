@@ -57,6 +57,12 @@ void Particle::setColor(sf::Color color)
     mCircle.setFillColor(color);
 }
 
+void Particle::setMoveVector(const sf::Vector2f& moveVector)
+{
+    mSpeed = Math::vectorLength(moveVector);
+    setDirection(moveVector);
+}
+
 sf::Vector2f Particle::getMoveVector() const
 {
     sf::Vector2f moveVector;
