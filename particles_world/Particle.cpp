@@ -102,7 +102,7 @@ void Particle::update(float dt)
 
 void Particle::draw()
 {
-    sf::RenderWindow* window = ServiceProvider::getWindowProvider()->getWindow();
+    sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
 
     mCircle.setPosition(mPosition);
     window->draw(mCircle);

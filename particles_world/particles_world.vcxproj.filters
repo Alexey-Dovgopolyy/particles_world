@@ -6,9 +6,9 @@
     <ClCompile Include="Force.cpp" />
     <ClCompile Include="ServiceProvider.cpp" />
     <ClCompile Include="Math.cpp" />
-    <ClCompile Include="WindowProvider.cpp" />
     <ClCompile Include="World.cpp" />
-    <ClCompile Include="ConfigReader.cpp" />
+    <ClCompile Include="WindowService.cpp" />
+    <ClCompile Include="ConfigService.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Particle.h" />
@@ -16,8 +16,8 @@
     <ClInclude Include="Force.h" />
     <ClInclude Include="ServiceProvider.h" />
     <ClInclude Include="Math.h" />
-    <ClInclude Include="WindowProvider.h" />
     <ClInclude Include="World.h" />
-    <ClInclude Include="ConfigReader.h" />
+    <ClInclude Include="WindowService.h" />
+    <ClInclude Include="ConfigService.h" />
   </ItemGroup>
 </Project>

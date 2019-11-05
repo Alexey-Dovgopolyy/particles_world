@@ -157,23 +157,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ConfigReader.cpp" />
+    <ClCompile Include="ConfigService.cpp" />
     <ClCompile Include="Force.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="particles_world.cpp" />
     <ClCompile Include="ServiceProvider.cpp" />
-    <ClCompile Include="WindowProvider.cpp" />
+    <ClCompile Include="WindowService.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common_data.h" />
-    <ClInclude Include="ConfigReader.h" />
+    <ClInclude Include="ConfigService.h" />
     <ClInclude Include="Force.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ServiceProvider.h" />
-    <ClInclude Include="WindowProvider.h" />
+    <ClInclude Include="WindowService.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

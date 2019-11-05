@@ -12,7 +12,7 @@ int main()
     ServiceProvider::create();
     ServiceProvider::init();
 
-    sf::RenderWindow* window = ServiceProvider::getWindowProvider()->getWindow();
+    sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
 
     World world;
     world.init();

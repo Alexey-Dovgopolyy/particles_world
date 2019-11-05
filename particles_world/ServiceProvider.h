@@ -1,6 +1,7 @@
 #pragma once
 
-#include "WindowProvider.h"
+#include "WindowService.h"
+#include "ConfigService.h"
 
 class ServiceProvider
 {
@@ -9,6 +10,7 @@ public:
     static void init();
     static void cleanup();
 
-    static WindowProvider* getWindowProvider();
+    static WindowService* getWindowService();
+    static ConfigService* getConfigService();
 };
 

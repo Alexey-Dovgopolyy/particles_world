@@ -1,23 +1,38 @@
 #include "ServiceProvider.h"
-#include "WindowProvider.h"
 
+#include <iostream>
 
 void ServiceProvider::create()
 {
-    WindowProvider::create();
+    ConfigService::create();
+    WindowService::create();
 }
 
 void ServiceProvider::cleanup()
 {
-    WindowProvider::cleanup();
+    ConfigService::cleanup();
+    WindowService::cleanup();
 }
 
 void ServiceProvider::init()
 {
-    WindowProvider::getInstance()->init();
+    if (!ConfigService::getInstance()->init())
+    {
+        std::cout << "ERROR: config init" << std::endl;
+    }
+
+    if (!WindowService::getInstance()->init())
+    {
+        std::cout << "ERROR: window init" << std::endl;
+    }
 }
 
-WindowProvider* ServiceProvider::getWindowProvider()
+WindowService* ServiceProvider::getWindowService()
 {
-    return WindowProvider::getInstance();
+    return WindowService::getInstance();
+}
+
+ConfigService* ServiceProvider::getConfigService()
+{
+    return ConfigService::getInstance();
 }

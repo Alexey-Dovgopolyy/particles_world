@@ -4,7 +4,7 @@
 
 #include <memory>
 
-class WindowProvider
+class WindowService
 {
     friend class ServiceProvider;
 
@@ -12,18 +12,18 @@ public:
     sf::RenderWindow* getWindow();
 
 private:
-    WindowProvider();
-    WindowProvider(const WindowProvider& window) = delete;
+    WindowService();
+    WindowService(const WindowService& window) = delete;
 
-    void init();
+    bool init();
 
     static void create();
     static void cleanup();
-    static WindowProvider* getInstance();
+    static WindowService* getInstance();
 
 private:
     std::unique_ptr<sf::RenderWindow> mWindow;
 
-    static WindowProvider* sInstance;
+    static WindowService* sInstance;
 };
 
