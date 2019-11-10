@@ -19,5 +19,6 @@
     <ClInclude Include="World.h" />
     <ClInclude Include="WindowService.h" />
     <ClInclude Include="ConfigService.h" />
+    <ClInclude Include="common_types.h" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,7 @@
 #pragma once
+
+#include "common_types.h"
+
 class ConfigService
 {
     friend class ServiceProvider;
@@ -12,6 +15,8 @@ public:
 
     float getRepelRadius() const;
     float getRepelCoef() const;
+
+    const DebugConfig& getDebugConfig() const;
 
 private:
     ConfigService();
@@ -34,5 +39,7 @@ private:
 
     float mRepelRadius = 4.f;
     float mRepelCoef = 1.f;
+
+    DebugConfig mDebugConfig;
 };
 

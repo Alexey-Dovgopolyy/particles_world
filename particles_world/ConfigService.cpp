@@ -42,6 +42,19 @@ bool ConfigService::init()
     mRepelRadius = document["repel_radius"].GetFloat();
     mRepelCoef = document["repel_coef"].GetFloat();
 
+    mDebugConfig.debugP1PosX = document["debug_p1_pos_x"].GetFloat();
+    mDebugConfig.debugP1PosY = document["debug_p1_pos_y"].GetFloat();
+    mDebugConfig.debugP2PosX = document["debug_p2_pos_x"].GetFloat();
+    mDebugConfig.debugP2PosY = document["debug_p2_pos_y"].GetFloat();
+
+    mDebugConfig.debugP1DirX = document["debug_p1_dir_x"].GetFloat();
+    mDebugConfig.debugP1DirY = document["debug_p1_dir_y"].GetFloat();
+    mDebugConfig.debugP2DirX = document["debug_p2_dir_x"].GetFloat();
+    mDebugConfig.debugP2DirY = document["debug_p2_dir_y"].GetFloat();
+
+    mDebugConfig.debugP1Speed = document["debug_p1_speed"].GetFloat();
+    mDebugConfig.debugP2Speed = document["debug_p2_speed"].GetFloat();
+
     return true;
 }
 
@@ -73,6 +86,11 @@ float ConfigService::getRepelRadius() const
 float ConfigService::getRepelCoef() const
 {
     return mRepelCoef;
+}
+
+const DebugConfig& ConfigService::getDebugConfig() const
+{
+    return mDebugConfig;
 }
 
 void ConfigService::create()

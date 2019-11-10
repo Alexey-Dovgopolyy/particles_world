@@ -1,6 +1,7 @@
 #include "World.h"
 #include "Math.h"
 #include "common_data.h"
+#include "common_types.h"
 #include "ServiceProvider.h"
 
 #include "SFML/Graphics/Color.hpp"
@@ -18,17 +19,25 @@ World::~World()
 
 void World::init()
 {
-    Force f1(sf::Vector2f(1.f, 0.f), 100.f);
-    Force f2(sf::Vector2f(-1.f, 0.f), 100.f);
+    debugInit();
+}
+
+void World::debugInit()
+{
+    ConfigService* config = ServiceProvider::getConfigService();
+    const DebugConfig& debugConfig = config->getDebugConfig();
+
+    Force f1(sf::Vector2f(debugConfig.debugP1DirX, debugConfig.debugP1DirY), debugConfig.debugP1Speed);
+    Force f2(sf::Vector2f(debugConfig.debugP2DirX, debugConfig.debugP2DirY), debugConfig.debugP2Speed);
 
     Particle p1;
-    p1.setPosition(sf::Vector2f(0.f, 300.f));
+    p1.setPosition(sf::Vector2f(debugConfig.debugP1PosX, debugConfig.debugP1PosY));
     p1.setRadius(2.f);
     p1.applyForce(f1);
     p1.setColor(sf::Color::Green);
 
     Particle p2;
-    p2.setPosition(sf::Vector2f(800.f, 315.f));
+    p2.setPosition(sf::Vector2f(debugConfig.debugP2PosX, debugConfig.debugP2PosY));
     p2.setRadius(2.f);
     p2.applyForce(f2);
 
@@ -36,7 +45,7 @@ void World::init()
     mParticles.push_back(p2);
 }
 
-void World::update(float dt)
+void World::debugCollision()
 {
     Particle& particle1 = mParticles[0];
     Particle& particle2 = mParticles[1];
@@ -81,6 +90,11 @@ void World::update(float dt)
         particle1.moveBy(moveP1);
         particle2.moveBy(moveP2);
     }
+}
+
+void World::update(float dt)
+{
+    debugCollision();
 
     for (Particle& particle : mParticles)
     {
@@ -126,6 +140,10 @@ void World::collide(Particle& particle1, Particle& particle2)
 
     sf::Vector2f newDirection1 = projPerpToCollision1 + projMoveToCollision2;
     sf::Vector2f newDirection2 = projPerpToCollision2 + projMoveToCollision1;
+
+    ConfigService* config = ServiceProvider::getConfigService();
+    newDirection1 *= config->getRepelCoef();
+    newDirection2 *= config->getRepelCoef();
 
     particle1.setMoveVector(newDirection1);
     particle2.setMoveVector(newDirection2);

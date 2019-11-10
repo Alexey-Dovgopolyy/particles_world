@@ -10,6 +10,9 @@ public:
     ~World();
 
     void init();
+    void debugInit();
+
+    void debugCollision();
 
     void update(float dt);
     void draw();
