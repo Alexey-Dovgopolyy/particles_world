@@ -10,8 +10,8 @@
 
     "debug_p1_pos_x": 400.0,
     "debug_p1_pos_y": 300.0,
-    "debug_p2_pos_x": 420.0,
-    "debug_p2_pos_y": 315.0,
+    "debug_p2_pos_x": 415.0,
+    "debug_p2_pos_y": 302.0,
 
     "debug_p1_dir_x": 1.0,
     "debug_p1_dir_y": 0.0,
@@ -19,5 +19,5 @@
     "debug_p2_dir_y": 0.0,
 
     "debug_p1_speed": 0.0,
-    "debug_p2_speed": 0.0
+    "debug_p2_speed": 5.0
 }

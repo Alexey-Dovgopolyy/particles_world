@@ -61,9 +61,12 @@ void World::debugCollision()
     float attractionRadius = config->getAttractionRadius();
     float attractionCoef = config->getAttractionCoef();
     float repelRadius = config->getRepelRadius();
+    float repelCoef = config->getRepelCoef();
+    float particleRadius = 2.f;
 
     bool isAttracting = (distance < attractionRadius && distance > repelRadius);
-    bool isRepelling = (distance < repelRadius);
+    bool isRepelling = (distance < repelRadius && distance > (particleRadius * 2.f));
+    bool isCollide = (distance < (particleRadius * 2.f));
 
     if (isAttracting)
     {
@@ -79,9 +82,23 @@ void World::debugCollision()
     }
     else if (isRepelling)
     {
+        sf::Vector2f repellingVector1 = particlePos1 - particlePos2;
+        sf::Vector2f repellingVector2 = particlePos2 - particlePos1;
+
+        float repellingForceAmount = repelRadius - distance;
+        repellingForceAmount *= repelCoef;
+
+        Force repelForce1(repellingVector1, repellingForceAmount);
+        Force repelForce2(repellingVector2, repellingForceAmount);
+
+        particle1.applyForce(repelForce1);
+        particle2.applyForce(repelForce2);
+    }
+    else if (isCollide)
+    {
         collide(particle1, particle2);
 
-        float distanceDiff = repelRadius - distance;
+        float distanceDiff = (particleRadius * 2.f) - distance;
         distanceDiff /= 2.f;
 
         sf::Vector2f moveP2 = Math::normalize(attractDir) * distanceDiff;
