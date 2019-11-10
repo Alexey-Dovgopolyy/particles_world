@@ -1,4 +1,5 @@
 #include "WindowService.h"
+#include "ServiceProvider.h"
 
 WindowService* WindowService::sInstance = nullptr;
 
@@ -20,7 +21,11 @@ void WindowService::cleanup()
 
 bool WindowService::init()
 {
-    mWindow = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600), "Physics");
+    ConfigService* config = ServiceProvider::getConfigService();
+    int windowWidth = config->getWinSizeX();
+    int windowHeight = config->getWinSizeY();
+
+    mWindow = std::make_unique<sf::RenderWindow>(sf::VideoMode(windowWidth, windowHeight), "Physics");
 
     bool result = (mWindow != nullptr);
     return result;

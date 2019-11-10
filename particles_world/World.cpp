@@ -1,6 +1,7 @@
 #include "World.h"
 #include "Math.h"
 #include "common_data.h"
+#include "ServiceProvider.h"
 
 #include "SFML/Graphics/Color.hpp"
 
@@ -46,13 +47,19 @@ void World::update(float dt)
     sf::Vector2f attractDir = particlePos2 - particlePos1;
     float distance = Math::vectorLength(attractDir);
 
-    bool isAttracting = (distance < gAttractionRadius && distance > gRepelRadius);
-    bool isRepelling = (distance < gRepelRadius);
+    ConfigService* config = ServiceProvider::getConfigService();
+
+    float attractionRadius = config->getAttractionRadius();
+    float attractionCoef = config->getAttractionCoef();
+    float repelRadius = config->getRepelRadius();
+
+    bool isAttracting = (distance < attractionRadius && distance > repelRadius);
+    bool isRepelling = (distance < repelRadius);
 
     if (isAttracting)
     {
-        float attractionForceAmount = gAttractionRadius - distance;
-        attractionForceAmount *= gAttractionCoef;
+        float attractionForceAmount = attractionRadius - distance;
+        attractionForceAmount *= attractionCoef;
 
         Force attractionForce(attractDir, attractionForceAmount);
 
@@ -65,7 +72,7 @@ void World::update(float dt)
     {
         collide(particle1, particle2);
 
-        float distanceDiff = gRepelRadius - distance;
+        float distanceDiff = repelRadius - distance;
         distanceDiff /= 2.f;
 
         sf::Vector2f moveP2 = Math::normalize(attractDir) * distanceDiff;
@@ -73,8 +80,6 @@ void World::update(float dt)
 
         particle1.moveBy(moveP1);
         particle2.moveBy(moveP2);
-
-        std::cout << distance << std::endl;
     }
 
     for (Particle& particle : mParticles)
