@@ -13,6 +13,8 @@ int main()
     ServiceProvider::init();
 
     sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
+    
+    InputService* inputService = ServiceProvider::getInputService();
 
     World world;
     world.init();
@@ -22,18 +24,7 @@ int main()
 
     while (window->isOpen())
     {
-        //bool needCloseWindow = world.processInput();
-//         if (needCloseWindow)
-//         {
-//             break;
-//         }
-
-        sf::Event event;
-        while (window->pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window->close();
-        }
+        inputService->processInput();
 
         sf::Time dt = clock.restart();
         timeSinceLastUpdate += dt;

@@ -6,12 +6,14 @@ void ServiceProvider::create()
 {
     ConfigService::create();
     WindowService::create();
+    InputService::create();
 }
 
 void ServiceProvider::cleanup()
 {
     ConfigService::cleanup();
     WindowService::cleanup();
+    InputService::cleanup();
 }
 
 void ServiceProvider::init()
@@ -25,6 +27,11 @@ void ServiceProvider::init()
     {
         std::cout << "ERROR: window init" << std::endl;
     }
+
+    if (!InputService::getInstance()->init())
+    {
+        std::cout << "ERROR: input init" << std::endl;
+    }
 }
 
 WindowService* ServiceProvider::getWindowService()
@@ -35,4 +42,9 @@ WindowService* ServiceProvider::getWindowService()
 ConfigService* ServiceProvider::getConfigService()
 {
     return ConfigService::getInstance();
+}
+
+InputService* ServiceProvider::getInputService()
+{
+    return InputService::getInstance();
 }

@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="ConfigService.cpp" />
     <ClCompile Include="Force.cpp" />
+    <ClCompile Include="InputService.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="particles_world.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="common_types.h" />
     <ClInclude Include="ConfigService.h" />
     <ClInclude Include="Force.h" />
+    <ClInclude Include="InputService.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ServiceProvider.h" />

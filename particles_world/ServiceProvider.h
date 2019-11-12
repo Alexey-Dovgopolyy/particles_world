@@ -2,6 +2,7 @@
 
 #include "WindowService.h"
 #include "ConfigService.h"
+#include "InputService.h"
 
 class ServiceProvider
 {
@@ -12,5 +13,6 @@ public:
 
     static WindowService* getWindowService();
     static ConfigService* getConfigService();
+    static InputService* getInputService();
 };
 
