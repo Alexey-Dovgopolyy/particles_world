@@ -166,6 +166,7 @@
     <ClCompile Include="ServiceProvider.cpp" />
     <ClCompile Include="WindowService.cpp" />
     <ClCompile Include="World.cpp" />
+    <ClCompile Include="WorldService.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common_data.h" />
@@ -178,6 +179,7 @@
     <ClInclude Include="ServiceProvider.h" />
     <ClInclude Include="WindowService.h" />
     <ClInclude Include="World.h" />
+    <ClInclude Include="WorldService.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

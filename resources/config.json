@@ -2,11 +2,16 @@
     "win_size_x": 800,
     "win_size_y": 600,
 
-    "attraction_radius": 100.0,
-    "attraction_coef": 0.005,
+    "attraction_radius": 10.0,
+    "attraction_coef": 1.4,
 
-    "repel_radius": 10.0,
+    "repel_radius": 7.0,
     "repel_coef": 0.9,
+
+    "particle_radius": 3.0,
+    "particle_draw_radius": 2.0,
+
+    "gravitation_force": 0.0,
 
     "debug_p1_pos_x": 400.0,
     "debug_p1_pos_y": 300.0,

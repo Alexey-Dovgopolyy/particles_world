@@ -9,7 +9,7 @@ public:
     World();
     ~World();
 
-    void init();
+    bool init();
     void debugInit();
     void cleanup();
 
@@ -28,6 +28,6 @@ private:
     std::vector<Particle*> mParticles;
 
     sf::CircleShape mSpawnZone;
-    float mSpawnRadius = 50.f;
+    float mSpawnRadius = 70.f;
 };
 

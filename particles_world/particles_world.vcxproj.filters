@@ -4,23 +4,50 @@
     <ClCompile Include="particles_world.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Force.cpp" />
-    <ClCompile Include="ServiceProvider.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="World.cpp" />
-    <ClCompile Include="WindowService.cpp" />
-    <ClCompile Include="ConfigService.cpp" />
-    <ClCompile Include="InputService.cpp" />
+    <ClCompile Include="ConfigService.cpp">
+      <Filter>services</Filter>
+    </ClCompile>
+    <ClCompile Include="InputService.cpp">
+      <Filter>services</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceProvider.cpp">
+      <Filter>services</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowService.cpp">
+      <Filter>services</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldService.cpp">
+      <Filter>services</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Particle.h" />
     <ClInclude Include="common_data.h" />
     <ClInclude Include="Force.h" />
-    <ClInclude Include="ServiceProvider.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="World.h" />
-    <ClInclude Include="WindowService.h" />
-    <ClInclude Include="ConfigService.h" />
     <ClInclude Include="common_types.h" />
-    <ClInclude Include="InputService.h" />
+    <ClInclude Include="ConfigService.h">
+      <Filter>services</Filter>
+    </ClInclude>
+    <ClInclude Include="InputService.h">
+      <Filter>services</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceProvider.h">
+      <Filter>services</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowService.h">
+      <Filter>services</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldService.h">
+      <Filter>services</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="services">
+      <UniqueIdentifier>{b6494526-adf0-4828-af01-893205de610e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

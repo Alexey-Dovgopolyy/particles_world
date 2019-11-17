@@ -42,6 +42,11 @@ bool ConfigService::init()
     mRepelRadius = document["repel_radius"].GetFloat();
     mRepelCoef = document["repel_coef"].GetFloat();
 
+    mParticleRadius = document["particle_radius"].GetFloat();
+    mParticleDrawRadius = document["particle_draw_radius"].GetFloat();
+
+    mGravitation = document["gravitation_force"].GetFloat();
+
     mDebugConfig.debugP1PosX = document["debug_p1_pos_x"].GetFloat();
     mDebugConfig.debugP1PosY = document["debug_p1_pos_y"].GetFloat();
     mDebugConfig.debugP2PosX = document["debug_p2_pos_x"].GetFloat();
@@ -89,6 +94,21 @@ float ConfigService::getRepelRadius() const
 float ConfigService::getRepelCoef() const
 {
     return mRepelCoef;
+}
+
+float ConfigService::getParticleRadius() const
+{
+    return mParticleRadius;
+}
+
+float ConfigService::getParticleDrawRadius() const
+{
+    return mParticleDrawRadius;
+}
+
+float ConfigService::getGravitation() const
+{
+    return mGravitation;
 }
 
 const DebugConfig& ConfigService::getDebugConfig() const

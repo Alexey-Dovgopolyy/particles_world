@@ -16,8 +16,7 @@ int main()
     
     InputService* inputService = ServiceProvider::getInputService();
 
-    World world;
-    world.init();
+    World* world = ServiceProvider::getWorldService()->getWorld();
 
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
@@ -33,15 +32,13 @@ int main()
         {
             timeSinceLastUpdate -= sTimePerFrame;
 
-            world.update(sTimePerFrame.asSeconds());
+            world->update(sTimePerFrame.asSeconds());
         }
 
         window->clear();
-        world.draw();
+        world->draw();
         window->display();
     }
-
-    world.cleanup();
 
     ServiceProvider::cleanup();
 

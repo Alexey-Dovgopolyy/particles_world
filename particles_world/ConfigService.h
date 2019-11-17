@@ -16,6 +16,11 @@ public:
     float getRepelRadius() const;
     float getRepelCoef() const;
 
+    float getParticleRadius() const;
+    float getParticleDrawRadius() const;
+
+    float getGravitation() const;
+
     const DebugConfig& getDebugConfig() const;
 
 private:
@@ -39,6 +44,11 @@ private:
 
     float mRepelRadius = 4.f;
     float mRepelCoef = 1.f;
+
+    float mParticleRadius = 2.f;
+    float mParticleDrawRadius = 2.f;
+
+    float mGravitation = 1.f;
 
     DebugConfig mDebugConfig;
 };

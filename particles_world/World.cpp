@@ -18,45 +18,28 @@ World::~World()
 {
 }
 
-void World::init()
+bool World::init()
 {
     mSpawnZone.setRadius(mSpawnRadius);
     mSpawnZone.setFillColor(sf::Color::Transparent);
     mSpawnZone.setOutlineColor(sf::Color(100, 100, 100));
-    //mSpawnZone.setOutlineColor(sf::Color::Cyan);
     mSpawnZone.setOutlineThickness(1.f);
     float origin = mSpawnRadius / 2.f;
     mSpawnZone.setOrigin(origin, origin);
 
     debugInit();
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 100; i++)
     {
         createParticle(mSpawnZone.getPosition(), mSpawnRadius);
     }
+
+    return true;
 }
 
 void World::debugInit()
 {
-    ConfigService* config = ServiceProvider::getConfigService();
-    const DebugConfig& debugConfig = config->getDebugConfig();
-
-    Force f1(sf::Vector2f(debugConfig.debugP1DirX, debugConfig.debugP1DirY), debugConfig.debugP1Speed);
-    Force f2(sf::Vector2f(debugConfig.debugP2DirX, debugConfig.debugP2DirY), debugConfig.debugP2Speed);
-
-    Particle p1;
-    p1.setPosition(sf::Vector2f(debugConfig.debugP1PosX, debugConfig.debugP1PosY));
-    p1.setRadius(2.f);
-    p1.applyForce(f1);
-    p1.setColor(sf::Color::Green);
-
-    Particle p2;
-    p2.setPosition(sf::Vector2f(debugConfig.debugP2PosX, debugConfig.debugP2PosY));
-    p2.setRadius(2.f);
-    p2.applyForce(f2);
-
-    //mParticles.push_back(p1);
-    //mParticles.push_back(p2);
+    const DebugConfig& debugConfig = ServiceProvider::getConfigService()->getDebugConfig();
 
     mSpawnZone.setPosition(debugConfig.debugSpawnPosX, debugConfig.debugSpawnPosY);
 }
@@ -71,9 +54,6 @@ void World::cleanup()
 
 void World::debugCollision(Particle& particle1, Particle& particle2)
 {
-//     Particle& particle1 = mParticles[0];
-//     Particle& particle2 = mParticles[1];
-
     const sf::Vector2f& particlePos1 = particle1.getPosition();
     const sf::Vector2f& particlePos2 = particle2.getPosition();
 
@@ -86,11 +66,11 @@ void World::debugCollision(Particle& particle1, Particle& particle2)
     float attractionCoef = config->getAttractionCoef();
     float repelRadius = config->getRepelRadius();
     float repelCoef = config->getRepelCoef();
-    float particleRadius = 2.f;
+    float particleRadius = config->getParticleRadius();
 
-    bool isAttracting = (distance < attractionRadius && distance > repelRadius);
-    bool isRepelling = (distance < repelRadius && distance > (particleRadius * 2.f));
-    bool isCollide = (distance < (particleRadius * 2.f));
+    bool isAttracting = (distance <= attractionRadius && distance > repelRadius);
+    bool isRepelling = (distance <= repelRadius && distance > (particleRadius * 2.f));
+    bool isCollide = (distance <= (particleRadius * 2.f));
 
     if (isAttracting)
     {
@@ -139,11 +119,22 @@ void World::update(float dt)
     {
         for (size_t j = i + 1; j < mParticles.size(); j++)
         {
-            Particle& particle1 = *(mParticles[i]);
-            Particle& particle2 = *(mParticles[j]);
+            Particle* particle1 = mParticles[i];
+            Particle* particle2 = mParticles[j];
 
-            debugCollision(particle1, particle2);
+            debugCollision(*particle1, *particle2);
         }
+    }
+
+    float gravitationForce = ServiceProvider::getConfigService()->getGravitation();
+
+    for (Particle* particle : mParticles)
+    {
+        Force gravitation;
+        gravitation.setDirection(sf::Vector2f(0.f, 1.f));
+        gravitation.setAmount(gravitationForce);
+
+        particle->applyForce(gravitation);
     }
 
     for (Particle* particle : mParticles)
@@ -154,8 +145,8 @@ void World::update(float dt)
 
 void World::draw()
 {
-    sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
-    window->draw(mSpawnZone);
+    //sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
+    //window->draw(mSpawnZone);
 
     for (Particle* particle : mParticles)
     {
@@ -185,16 +176,14 @@ void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)
 
     sf::Vector2f particlePos = zoneCenter + randomVector;
 
-    static int colorBluePart = 255;
+    float particleRadius = ServiceProvider::getConfigService()->getParticleRadius();
+    float drawRadius = ServiceProvider::getConfigService()->getParticleDrawRadius();
 
     Particle* particle = new Particle();
     particle->setPosition(particlePos);
-    particle->setRadius(2.f);
-    particle->setColor(sf::Color(colorBluePart, 255, colorBluePart));
+    particle->setRadius(drawRadius);
 
     mParticles.push_back(particle);
-
-    colorBluePart -= 20;
 }
 
 void World::collide(Particle& particle1, Particle& particle2)
@@ -224,8 +213,6 @@ void World::collide(Particle& particle1, Particle& particle2)
     sf::Vector2f newDirection2 = projPerpToCollision2 + projMoveToCollision1;
 
     ConfigService* config = ServiceProvider::getConfigService();
-    newDirection1 *= config->getRepelCoef();
-    newDirection2 *= config->getRepelCoef();
 
     particle1.setMoveVector(newDirection1);
     particle2.setMoveVector(newDirection2);

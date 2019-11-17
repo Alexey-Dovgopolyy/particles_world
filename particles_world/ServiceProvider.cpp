@@ -7,6 +7,7 @@ void ServiceProvider::create()
     ConfigService::create();
     WindowService::create();
     InputService::create();
+    WorldService::create();
 }
 
 void ServiceProvider::cleanup()
@@ -14,6 +15,7 @@ void ServiceProvider::cleanup()
     ConfigService::cleanup();
     WindowService::cleanup();
     InputService::cleanup();
+    WorldService::cleanup();
 }
 
 void ServiceProvider::init()
@@ -32,6 +34,11 @@ void ServiceProvider::init()
     {
         std::cout << "ERROR: input init" << std::endl;
     }
+
+    if (!WorldService::getInstance()->init())
+    {
+        std::cout << "ERROR: world init" << std::endl;
+    }
 }
 
 WindowService* ServiceProvider::getWindowService()
@@ -47,4 +54,9 @@ ConfigService* ServiceProvider::getConfigService()
 InputService* ServiceProvider::getInputService()
 {
     return InputService::getInstance();
+}
+
+WorldService* ServiceProvider::getWorldService()
+{
+    return WorldService::getInstance();
 }
