@@ -14,4 +14,7 @@ struct DebugConfig
 
     float debugP1Speed = 0.f;
     float debugP2Speed = 0.f;
+
+    float debugSpawnPosX = 0.f;
+    float debugSpawnPosY = 0.f;
 };

@@ -12,5 +12,6 @@ public:
     static sf::Vector2f normalize(const sf::Vector2f& vec);
     static void normalizeThis(sf::Vector2f& vec);
     static float distanceFromPointToSegment(const sf::Vector2f& point, const sf::Vector2f& segmentP1, const sf::Vector2f& segmentP2);
+    static int randomInt(int from, int to);
 };
 

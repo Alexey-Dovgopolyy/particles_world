@@ -55,6 +55,9 @@ bool ConfigService::init()
     mDebugConfig.debugP1Speed = document["debug_p1_speed"].GetFloat();
     mDebugConfig.debugP2Speed = document["debug_p2_speed"].GetFloat();
 
+    mDebugConfig.debugSpawnPosX = document["debug_spawn_zone_pos_x"].GetFloat();
+    mDebugConfig.debugSpawnPosY = document["debug_spawn_zone_pos_y"].GetFloat();
+
     return true;
 }
 

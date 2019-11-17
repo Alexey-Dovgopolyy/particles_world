@@ -11,8 +11,9 @@ public:
 
     void init();
     void debugInit();
+    void cleanup();
 
-    void debugCollision();
+    void debugCollision(Particle& particle1, Particle& particle2);
 
     void update(float dt);
     void draw();
@@ -24,6 +25,9 @@ private:
     static sf::Vector2f calculateReflectVector(const sf::Vector2f& wall, Particle& particle);
 
 private:
-    std::vector<Particle> mParticles;
+    std::vector<Particle*> mParticles;
+
+    sf::CircleShape mSpawnZone;
+    float mSpawnRadius = 50.f;
 };
 

@@ -19,5 +19,8 @@
     "debug_p2_dir_y": 0.0,
 
     "debug_p1_speed": 28.0,
-    "debug_p2_speed": 25.0
+    "debug_p2_speed": 25.0,
+
+    "debug_spawn_zone_pos_x": 400.0,
+    "debug_spawn_zone_pos_y": 300.0
 }

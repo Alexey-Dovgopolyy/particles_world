@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <random>
 
 World::World()
 {
@@ -19,7 +20,20 @@ World::~World()
 
 void World::init()
 {
+    mSpawnZone.setRadius(mSpawnRadius);
+    mSpawnZone.setFillColor(sf::Color::Transparent);
+    mSpawnZone.setOutlineColor(sf::Color(100, 100, 100));
+    //mSpawnZone.setOutlineColor(sf::Color::Cyan);
+    mSpawnZone.setOutlineThickness(1.f);
+    float origin = mSpawnRadius / 2.f;
+    mSpawnZone.setOrigin(origin, origin);
+
     debugInit();
+
+    for (int i = 0; i < 10; i++)
+    {
+        createParticle(mSpawnZone.getPosition(), mSpawnRadius);
+    }
 }
 
 void World::debugInit()
@@ -41,14 +55,24 @@ void World::debugInit()
     p2.setRadius(2.f);
     p2.applyForce(f2);
 
-    mParticles.push_back(p1);
-    mParticles.push_back(p2);
+    //mParticles.push_back(p1);
+    //mParticles.push_back(p2);
+
+    mSpawnZone.setPosition(debugConfig.debugSpawnPosX, debugConfig.debugSpawnPosY);
 }
 
-void World::debugCollision()
+void World::cleanup()
 {
-    Particle& particle1 = mParticles[0];
-    Particle& particle2 = mParticles[1];
+    for (Particle* particle : mParticles)
+    {
+        delete particle;
+    }
+}
+
+void World::debugCollision(Particle& particle1, Particle& particle2)
+{
+//     Particle& particle1 = mParticles[0];
+//     Particle& particle2 = mParticles[1];
 
     const sf::Vector2f& particlePos1 = particle1.getPosition();
     const sf::Vector2f& particlePos2 = particle2.getPosition();
@@ -111,25 +135,66 @@ void World::debugCollision()
 
 void World::update(float dt)
 {
-    debugCollision();
-
-    for (Particle& particle : mParticles)
+    for (size_t i = 0; i < mParticles.size(); i++)
     {
-        particle.update(dt);
+        for (size_t j = i + 1; j < mParticles.size(); j++)
+        {
+            Particle& particle1 = *(mParticles[i]);
+            Particle& particle2 = *(mParticles[j]);
+
+            debugCollision(particle1, particle2);
+        }
+    }
+
+    for (Particle* particle : mParticles)
+    {
+        particle->update(dt);
     }
 }
 
 void World::draw()
 {
-    for (Particle& particle : mParticles)
+    sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
+    window->draw(mSpawnZone);
+
+    for (Particle* particle : mParticles)
     {
-        particle.draw();
+        particle->draw();
     }
 }
 
 void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)
 {
+    int randomDistance = static_cast<int>(zoneRadius);
 
+    float randomX = static_cast<float>(Math::randomInt(0, randomDistance));
+    float randomY = static_cast<float>(Math::randomInt(0, randomDistance));
+
+    bool negateX = static_cast<bool>(Math::randomInt(0, 1));
+    bool negateY = static_cast<bool>(Math::randomInt(0, 1));
+
+    randomX = (negateX ? -randomX : randomX);
+    randomY = (negateY ? -randomY : randomY);
+
+    sf::Vector2f randomVector(randomX, randomY);
+    Math::normalizeThis(randomVector);
+
+    float randomLength = static_cast<float>(Math::randomInt(0, randomDistance));
+
+    randomVector *= randomLength;
+
+    sf::Vector2f particlePos = zoneCenter + randomVector;
+
+    static int colorBluePart = 255;
+
+    Particle* particle = new Particle();
+    particle->setPosition(particlePos);
+    particle->setRadius(2.f);
+    particle->setColor(sf::Color(colorBluePart, 255, colorBluePart));
+
+    mParticles.push_back(particle);
+
+    colorBluePart -= 20;
 }
 
 void World::collide(Particle& particle1, Particle& particle2)

@@ -41,6 +41,8 @@ int main()
         window->display();
     }
 
+    world.cleanup();
+
     ServiceProvider::cleanup();
 
     return 0;

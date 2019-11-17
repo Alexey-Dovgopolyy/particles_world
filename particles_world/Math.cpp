@@ -1,7 +1,7 @@
 #include "Math.h"
 
 #include <cmath>
-#include "Math.h"
+#include <random>
 
 sf::Vector2f Math::getPerp(const sf::Vector2f& vec)
 {
@@ -55,4 +55,14 @@ float Math::distanceFromPointToSegment(const sf::Vector2f& point, const sf::Vect
 
     float distance = (std::fabs(A * point.x + B * point.y + C)) / (std::sqrt(A * A + B * B));
     return distance;
+}
+
+int Math::randomInt(int from, int to)
+{
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist(from, to);
+
+    int result = dist(rng);
+    return result;
 }
