@@ -4,6 +4,7 @@
 #include "ConfigService.h"
 #include "InputService.h"
 #include "WorldService.h"
+#include "CommunicationService.h"
 
 class ServiceProvider
 {
@@ -16,5 +17,6 @@ public:
     static ConfigService* getConfigService();
     static InputService* getInputService();
     static WorldService* getWorldService();
+    static CommunicationService* getCommunicationService();
 };
 

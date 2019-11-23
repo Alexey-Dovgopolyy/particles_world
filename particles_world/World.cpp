@@ -20,12 +20,16 @@ World::~World()
 
 bool World::init()
 {
+    ServiceProvider::getCommunicationService()->addListener(MessageType::mouseWheelMoved, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::mouseDown, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::mouseMoved, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::mouseUp, this);
+
     mSpawnZone.setRadius(mSpawnRadius);
     mSpawnZone.setFillColor(sf::Color::Transparent);
     mSpawnZone.setOutlineColor(sf::Color(100, 100, 100));
     mSpawnZone.setOutlineThickness(1.f);
-    float origin = mSpawnRadius / 2.f;
-    mSpawnZone.setOrigin(origin, origin);
+    mSpawnZone.setOrigin(mSpawnRadius, mSpawnRadius);
 
     debugInit();
 
@@ -145,13 +149,25 @@ void World::update(float dt)
 
 void World::draw()
 {
-    //sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
-    //window->draw(mSpawnZone);
+    sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
+    window->draw(mSpawnZone);
 
     for (Particle* particle : mParticles)
     {
         particle->draw();
     }
+}
+
+void World::handleMessage(MessageType messageType, Message* message)
+{
+    if (messageType == MessageType::mouseWheelMoved)
+    {
+        if (MessageMouseWheelMove* wheelMessage = dynamic_cast<MessageMouseWheelMove*>(message))
+        {
+
+        }
+    }
+
 }
 
 void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)

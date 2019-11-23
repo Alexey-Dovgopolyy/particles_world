@@ -21,6 +21,8 @@ void WindowService::cleanup()
 
 bool WindowService::init()
 {
+    ServiceProvider::getCommunicationService()->addListener(MessageType::closeWindow, sInstance);
+
     ConfigService* config = ServiceProvider::getConfigService();
     int windowWidth = config->getWinSizeX();
     int windowHeight = config->getWinSizeY();
@@ -34,6 +36,14 @@ bool WindowService::init()
 sf::RenderWindow* WindowService::getWindow()
 {
     return mWindow.get();
+}
+
+void WindowService::handleMessage(MessageType messageType, Message* message)
+{
+    if (messageType == MessageType::closeWindow)
+    {
+        mWindow->close();
+    }
 }
 
 WindowService* WindowService::getInstance()

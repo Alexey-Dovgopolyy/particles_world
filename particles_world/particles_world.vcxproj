@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommunicationService.cpp" />
     <ClCompile Include="ConfigService.cpp" />
     <ClCompile Include="Force.cpp" />
     <ClCompile Include="InputService.cpp" />
@@ -171,10 +172,13 @@
   <ItemGroup>
     <ClInclude Include="common_data.h" />
     <ClInclude Include="common_types.h" />
+    <ClInclude Include="CommunicationService.h" />
     <ClInclude Include="ConfigService.h" />
     <ClInclude Include="Force.h" />
     <ClInclude Include="InputService.h" />
     <ClInclude Include="Math.h" />
+    <ClInclude Include="MessageListener.h" />
+    <ClInclude Include="Messages.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ServiceProvider.h" />
     <ClInclude Include="WindowService.h" />

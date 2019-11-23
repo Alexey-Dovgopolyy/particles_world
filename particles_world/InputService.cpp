@@ -38,22 +38,19 @@ void InputService::processInput()
     {
         if (event.type == sf::Event::Closed)
         {
-            window->close();
+            ServiceProvider::getCommunicationService()->queueMessage(MessageType::closeWindow, nullptr);
         }
 
         if (event.type == sf::Event::MouseMoved)
         {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-        }
-
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
-            std::cout << "mouse moved" << std::endl;
+            ServiceProvider::getCommunicationService()->queueMessage(MessageType::mouseMoved, new MessageMouseMove(mousePos));
         }
 
         if (event.type == sf::Event::MouseWheelScrolled)
         {
-            event.mouseWheelScroll.y;
+            float delta = event.mouseWheelScroll.delta;
+            ServiceProvider::getCommunicationService()->queueMessage(MessageType::mouseWheelMoved, new MessageMouseWheelMove(delta));
         }
     }
 }

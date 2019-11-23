@@ -3,10 +3,10 @@
     "win_size_y": 600,
 
     "attraction_radius": 10.0,
-    "attraction_coef": 1.4,
+    "attraction_coef": 0.5,
 
     "repel_radius": 7.0,
-    "repel_coef": 0.9,
+    "repel_coef": 0.1,
 
     "particle_radius": 3.0,
     "particle_draw_radius": 2.0,

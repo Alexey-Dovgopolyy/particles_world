@@ -1,9 +1,11 @@
 #pragma once
 #include "Particle.h"
+#include "MessageListener.h"
 
 #include <vector>
 
-class World
+class World :
+    public MessageListener
 {
 public:
     World();
@@ -18,6 +20,8 @@ public:
     void update(float dt);
     void draw();
 
+    void handleMessage(MessageType messageType, Message* message);
+
 private:
     void createParticle(const sf::Vector2f& zoneCenter, float zoneRadius);
 
@@ -28,6 +32,6 @@ private:
     std::vector<Particle*> mParticles;
 
     sf::CircleShape mSpawnZone;
-    float mSpawnRadius = 70.f;
+    float mSpawnRadius = 30.f;
 };
 

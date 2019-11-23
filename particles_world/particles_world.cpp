@@ -15,6 +15,7 @@ int main()
     sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
     
     InputService* inputService = ServiceProvider::getInputService();
+    CommunicationService* communication = ServiceProvider::getCommunicationService();
 
     World* world = ServiceProvider::getWorldService()->getWorld();
 
@@ -24,6 +25,7 @@ int main()
     while (window->isOpen())
     {
         inputService->processInput();
+        communication->executeAll();
 
         sf::Time dt = clock.restart();
         timeSinceLastUpdate += dt;

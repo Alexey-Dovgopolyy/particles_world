@@ -21,6 +21,9 @@
     <ClCompile Include="WorldService.cpp">
       <Filter>services</Filter>
     </ClCompile>
+    <ClCompile Include="CommunicationService.cpp">
+      <Filter>services</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Particle.h" />
@@ -42,6 +45,15 @@
       <Filter>services</Filter>
     </ClInclude>
     <ClInclude Include="WorldService.h">
+      <Filter>services</Filter>
+    </ClInclude>
+    <ClInclude Include="CommunicationService.h">
+      <Filter>services</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageListener.h">
+      <Filter>services</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages.h">
       <Filter>services</Filter>
     </ClInclude>
   </ItemGroup>
