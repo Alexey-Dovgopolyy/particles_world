@@ -53,4 +53,9 @@ void InputService::processInput()
             ServiceProvider::getCommunicationService()->queueMessage(MessageType::mouseWheelMoved, new MessageMouseWheelMove(delta));
         }
     }
+
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        ServiceProvider::getCommunicationService()->queueMessage(MessageType::spawnParticle, nullptr);
+    }
 }

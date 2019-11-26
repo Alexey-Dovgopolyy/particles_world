@@ -16,6 +16,12 @@ public:
         mDelta(delta)
     {}
 
+    bool isZoomIn() const
+    {
+        bool result = (mDelta > 0.f);
+        return result;
+    }
+
 public:
     float mDelta = 0.f;
 };
@@ -29,4 +35,10 @@ public:
 
 public:
     sf::Vector2i mMousePos;
+};
+
+class MessageSpawnParticle : public Message
+{
+public:
+    MessageSpawnParticle() {}
 };

@@ -20,6 +20,7 @@ public:
     float getParticleDrawRadius() const;
 
     float getGravitation() const;
+    float getParticleSpawnPeriod() const;
 
     const DebugConfig& getDebugConfig() const;
 
@@ -49,6 +50,7 @@ private:
     float mParticleDrawRadius = 2.f;
 
     float mGravitation = 1.f;
+    float mParticleSpawnPeriod = 0.1f;
 
     DebugConfig mDebugConfig;
 };

@@ -12,6 +12,7 @@
     "particle_draw_radius": 2.0,
 
     "gravitation_force": 0.0,
+    "particle_spawn_period": 0.1,
 
     "debug_p1_pos_x": 400.0,
     "debug_p1_pos_y": 300.0,

@@ -46,6 +46,7 @@ bool ConfigService::init()
     mParticleDrawRadius = document["particle_draw_radius"].GetFloat();
 
     mGravitation = document["gravitation_force"].GetFloat();
+    mParticleSpawnPeriod = document["particle_spawn_period"].GetFloat();
 
     mDebugConfig.debugP1PosX = document["debug_p1_pos_x"].GetFloat();
     mDebugConfig.debugP1PosY = document["debug_p1_pos_y"].GetFloat();
@@ -109,6 +110,11 @@ float ConfigService::getParticleDrawRadius() const
 float ConfigService::getGravitation() const
 {
     return mGravitation;
+}
+
+float ConfigService::getParticleSpawnPeriod() const
+{
+    return mParticleSpawnPeriod;
 }
 
 const DebugConfig& ConfigService::getDebugConfig() const

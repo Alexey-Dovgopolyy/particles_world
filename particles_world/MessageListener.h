@@ -8,7 +8,8 @@ enum class MessageType
     mouseDown,
     mouseMoved,
     mouseUp,
-    mouseWheelMoved
+    mouseWheelMoved,
+    spawnParticle
 };
 
 class MessageListener

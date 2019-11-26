@@ -24,6 +24,7 @@ bool World::init()
     ServiceProvider::getCommunicationService()->addListener(MessageType::mouseDown, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::mouseMoved, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::mouseUp, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::spawnParticle, this);
 
     mSpawnZone.setRadius(mSpawnRadius);
     mSpawnZone.setFillColor(sf::Color::Transparent);
@@ -32,11 +33,6 @@ bool World::init()
     mSpawnZone.setOrigin(mSpawnRadius, mSpawnRadius);
 
     debugInit();
-
-    for (int i = 0; i < 100; i++)
-    {
-        createParticle(mSpawnZone.getPosition(), mSpawnRadius);
-    }
 
     return true;
 }
@@ -119,6 +115,8 @@ void World::debugCollision(Particle& particle1, Particle& particle2)
 
 void World::update(float dt)
 {
+    accumulateUpdateTime(dt);
+
     for (size_t i = 0; i < mParticles.size(); i++)
     {
         for (size_t j = i + 1; j < mParticles.size(); j++)
@@ -164,10 +162,41 @@ void World::handleMessage(MessageType messageType, Message* message)
     {
         if (MessageMouseWheelMove* wheelMessage = dynamic_cast<MessageMouseWheelMove*>(message))
         {
-
+            bool isZoomIn = wheelMessage->isZoomIn();
+            mSpawnRadius += (isZoomIn ? 5.f : -5.f);
+            mSpawnRadius = std::max(0.f, mSpawnRadius);
+            mSpawnZone.setRadius(mSpawnRadius);
+            mSpawnZone.setOrigin(mSpawnRadius, mSpawnRadius);
         }
     }
 
+    if (messageType == MessageType::mouseDown)
+    {
+
+    }
+
+    if (messageType == MessageType::mouseMoved)
+    {
+        if (MessageMouseMove* moveMessage = dynamic_cast<MessageMouseMove*>(message))
+        {
+            sf::Vector2i mousePos = moveMessage->mMousePos;
+            mSpawnZone.setPosition(sf::Vector2f(float(mousePos.x), float(mousePos.y)));
+        }
+    }
+
+    if (messageType == MessageType::mouseUp)
+    {
+
+    }
+
+    if (messageType == MessageType::spawnParticle)
+    {
+        if (mUpdateTime > 0.1f)
+        {
+            resetUpdateTime();
+            createParticle(mSpawnZone.getPosition(), mSpawnRadius);
+        }
+    }
 }
 
 void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)
@@ -200,6 +229,16 @@ void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)
     particle->setRadius(drawRadius);
 
     mParticles.push_back(particle);
+}
+
+void World::accumulateUpdateTime(float dt)
+{
+    mUpdateTime += dt;
+}
+
+void World::resetUpdateTime()
+{
+    mUpdateTime = 0.f;
 }
 
 void World::collide(Particle& particle1, Particle& particle2)
