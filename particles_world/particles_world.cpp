@@ -5,7 +5,7 @@
 #include "ServiceProvider.h"
 #include "World.h"
 
-sf::Time sTimePerFrame = sf::seconds(1.f / 90.f);
+sf::Time sTimePerFrame = sf::seconds(1.f / 60.f);
 
 int main()
 {
@@ -24,17 +24,22 @@ int main()
 
     while (window->isOpen())
     {
-        inputService->processInput();
-        communication->executeAll();
-
         sf::Time dt = clock.restart();
         timeSinceLastUpdate += dt;
 
         while (timeSinceLastUpdate > sTimePerFrame)
         {
             timeSinceLastUpdate -= sTimePerFrame;
+            //timeSinceLastUpdate = sf::Time::Zero;
+
+            inputService->processInput();
+            communication->executeAll();
 
             world->update(sTimePerFrame.asSeconds());
+
+//             window->clear();
+//             world->draw();
+//             window->display();
         }
 
         window->clear();

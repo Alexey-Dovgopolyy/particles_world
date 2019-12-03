@@ -24,6 +24,15 @@
     <ClCompile Include="CommunicationService.cpp">
       <Filter>services</Filter>
     </ClCompile>
+    <ClCompile Include="DataTextService.cpp">
+      <Filter>services</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>services</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsService.cpp">
+      <Filter>services</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Particle.h" />
@@ -54,6 +63,15 @@
       <Filter>services</Filter>
     </ClInclude>
     <ClInclude Include="Messages.h">
+      <Filter>services</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTextService.h">
+      <Filter>services</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>services</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsService.h">
       <Filter>services</Filter>
     </ClInclude>
   </ItemGroup>

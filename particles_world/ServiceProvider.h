@@ -5,6 +5,8 @@
 #include "InputService.h"
 #include "WorldService.h"
 #include "CommunicationService.h"
+#include "DataTextService.h"
+#include "PhysicsService.h"
 
 class ServiceProvider
 {
@@ -18,5 +20,7 @@ public:
     static InputService* getInputService();
     static WorldService* getWorldService();
     static CommunicationService* getCommunicationService();
+    static DataTextService* getDataTextService();
+    static PhysicsService* getPhysicsService();
 };
 

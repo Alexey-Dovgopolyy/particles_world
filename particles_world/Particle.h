@@ -2,6 +2,7 @@
 
 #include "SFML/Graphics/CircleShape.hpp"
 #include "SFML/Graphics/Color.hpp"
+#include "SFML/Graphics/Rect.hpp"
 
 #include "Force.h"
 
@@ -33,6 +34,8 @@ public:
 
     void update(float dt);
     void draw();
+
+    sf::FloatRect getBoundingRect() const;
 
 private:
     sf::CircleShape mCircle;

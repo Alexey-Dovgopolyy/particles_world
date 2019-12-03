@@ -107,3 +107,18 @@ void Particle::draw()
     mCircle.setPosition(mPosition);
     window->draw(mCircle);
 }
+
+sf::FloatRect Particle::getBoundingRect() const
+{
+    float attractionRadius = ServiceProvider::getConfigService()->getAttractionRadius();
+
+    sf::Vector2f centerPos = mPosition;
+
+    sf::FloatRect rect;
+    rect.left = mPosition.x - attractionRadius;
+    rect.top = mPosition.y - attractionRadius;
+    rect.width = attractionRadius * 2.f;
+    rect.height = attractionRadius * 2.f;
+
+    return rect;
+}

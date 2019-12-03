@@ -9,6 +9,8 @@ void ServiceProvider::create()
     WindowService::create();
     InputService::create();
     WorldService::create();
+    DataTextService::create();
+    PhysicsService::create();
 }
 
 void ServiceProvider::cleanup()
@@ -18,6 +20,8 @@ void ServiceProvider::cleanup()
     InputService::cleanup();
     WorldService::cleanup();
     CommunicationService::cleanup();
+    DataTextService::cleanup();
+    PhysicsService::cleanup();
 }
 
 void ServiceProvider::init()
@@ -46,6 +50,16 @@ void ServiceProvider::init()
     {
         std::cout << "ERROR: communication service" << std::endl;
     }
+
+    if (!DataTextService::getInstance()->init())
+    {
+        std::cout << "ERROR: data service" << std::endl;
+    }
+
+    if (!PhysicsService::getInstance()->init())
+    {
+        std::cout << "ERROR: physics service" << std::endl;
+    }
 }
 
 WindowService* ServiceProvider::getWindowService()
@@ -71,4 +85,14 @@ WorldService* ServiceProvider::getWorldService()
 CommunicationService* ServiceProvider::getCommunicationService()
 {
     return CommunicationService::getInstance();
+}
+
+DataTextService* ServiceProvider::getDataTextService()
+{
+    return DataTextService::getInstance();
+}
+
+PhysicsService* ServiceProvider::getPhysicsService()
+{
+    return PhysicsService::getInstance();
 }

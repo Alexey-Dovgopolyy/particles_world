@@ -159,11 +159,14 @@
   <ItemGroup>
     <ClCompile Include="CommunicationService.cpp" />
     <ClCompile Include="ConfigService.cpp" />
+    <ClCompile Include="DataTextService.cpp" />
     <ClCompile Include="Force.cpp" />
     <ClCompile Include="InputService.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="particles_world.cpp" />
+    <ClCompile Include="PhysicsService.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="ServiceProvider.cpp" />
     <ClCompile Include="WindowService.cpp" />
     <ClCompile Include="World.cpp" />
@@ -174,12 +177,15 @@
     <ClInclude Include="common_types.h" />
     <ClInclude Include="CommunicationService.h" />
     <ClInclude Include="ConfigService.h" />
+    <ClInclude Include="DataTextService.h" />
     <ClInclude Include="Force.h" />
     <ClInclude Include="InputService.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="MessageListener.h" />
     <ClInclude Include="Messages.h" />
     <ClInclude Include="Particle.h" />
+    <ClInclude Include="PhysicsService.h" />
+    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="ServiceProvider.h" />
     <ClInclude Include="WindowService.h" />
     <ClInclude Include="World.h" />
