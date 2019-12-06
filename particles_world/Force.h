@@ -8,6 +8,7 @@ class Force
 public:
     Force();
     Force(const sf::Vector2f& direction, float amount);
+    Force(const sf::Vector2f& forceVector);
     ~Force();
 
     void setDirection(const sf::Vector2f& direction);
@@ -16,6 +17,7 @@ public:
     void setAmount(float amount);
     float getAmount() const;
 
+    void setForce(const sf::Vector2f& force);
     const sf::Vector2f& getForceVector() const;
 
 private:

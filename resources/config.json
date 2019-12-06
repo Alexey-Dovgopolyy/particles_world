@@ -2,17 +2,21 @@
     "win_size_x": 800,
     "win_size_y": 600,
 
-    "attraction_radius": 10.0,
-    "attraction_coef": 0.5,
+    "attraction_radius": 30.0,
+    "attraction_coef": 1.0,
 
-    "repel_radius": 7.0,
-    "repel_coef": 0.1,
+    "repel_radius": 30.0,
+    "repel_coef": 0.7,
 
-    "particle_radius": 3.0,
-    "particle_draw_radius": 2.0,
+    "particle_radius": 5.336,
+    "particle_draw_radius": 5.0,
 
     "gravitation_force": 0.0,
-    "particle_spawn_period": 0.1,
+    "particle_spawn_period": 0.5,
+
+    "e_coef": 0.06334,
+    "repel_power": 5,
+    "attract_power": 3,
 
     "debug_p1_pos_x": 400.0,
     "debug_p1_pos_y": 300.0,

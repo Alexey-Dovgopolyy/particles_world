@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+InputService* InputService::sInstance = nullptr;
+
 InputService::InputService()
 {
 
@@ -13,20 +15,23 @@ InputService::InputService()
 
 bool InputService::init()
 {
-    return false;
+    return true;
 }
 
 void InputService::create()
 {
+    sInstance = new InputService();
 }
 
 void InputService::cleanup()
 {
+    delete sInstance;
+    sInstance = nullptr;
 }
 
 InputService* InputService::getInstance()
 {
-    return nullptr;
+    return sInstance;
 }
 
 void InputService::processInput()
@@ -52,9 +57,19 @@ void InputService::processInput()
             float delta = event.mouseWheelScroll.delta;
             ServiceProvider::getCommunicationService()->queueMessage(MessageType::mouseWheelMoved, new MessageMouseWheelMove(delta));
         }
+
+        if (event.type == sf::Event::GainedFocus)
+        {
+            mIsMouseInWindow = true;
+        }
+
+        if (event.type == sf::Event::LostFocus)
+        {
+            mIsMouseInWindow = false;
+        }
     }
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && mIsMouseInWindow == true)
     {
         ServiceProvider::getCommunicationService()->queueMessage(MessageType::spawnParticle, nullptr);
     }

@@ -20,5 +20,7 @@ private:
 
 private:
     static InputService* sInstance;
+
+    bool mIsMouseInWindow = true;
 };
 

@@ -35,12 +35,15 @@ public:
     void update(float dt);
     void draw();
 
-    sf::FloatRect getBoundingRect() const;
+    const sf::FloatRect& getBoundingRect() const;
 
 private:
     sf::CircleShape mCircle;
+    sf::CircleShape mAttractionCircle;
+    sf::CircleShape mRepelCircle;
     sf::Vector2f mPosition;
     sf::Vector2f mDirection;
     float mSpeed = 0.f;
+    sf::FloatRect mBounds;
 };
 

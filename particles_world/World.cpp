@@ -59,17 +59,18 @@ void World::update(float dt)
     PhysicsService* physics = ServiceProvider::getPhysicsService();
     physics->clear();
     
-    for (Particle* particle : mParticles)
-    {
-        physics->insert(particle);
-    }
-
-    for (Particle* particle : mParticles)
-    {
-        physics->retrievePossibleCollisions(particle);
-    }
+//     for (Particle* particle : mParticles)
+//     {
+//         physics->insert(particle);
+//     }
+// 
+//     for (Particle* particle : mParticles)
+//     {
+//         physics->retrievePossibleCollisions(particle);
+//     }
     
-    physics->resolveCollisions();
+    physics->resolveCollisions(mParticles);
+    physics->applyForces();
 
     float gravitationForce = ServiceProvider::getConfigService()->getGravitation();
 
@@ -90,6 +91,8 @@ void World::update(float dt)
 
 void World::draw()
 {
+    ServiceProvider::getPhysicsService()->draw();
+
     sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
     window->draw(mSpawnZone);
 
@@ -97,8 +100,6 @@ void World::draw()
     {
         particle->draw();
     }
-
-    ServiceProvider::getPhysicsService()->draw();
 }
 
 void World::handleMessage(MessageType messageType, Message* message)
@@ -136,7 +137,9 @@ void World::handleMessage(MessageType messageType, Message* message)
 
     if (messageType == MessageType::spawnParticle)
     {
-        if (mUpdateTime > 0.01f)
+        float spawnPeriod = ServiceProvider::getConfigService()->getParticleSpawnPeriod();
+
+        if (mUpdateTime > spawnPeriod)
         {
             resetUpdateTime();
             createParticle(mSpawnZone.getPosition(), mSpawnRadius);

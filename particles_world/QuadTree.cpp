@@ -7,7 +7,7 @@ QuadTree::QuadTree()
 {
     mDebugRectangle.setFillColor(sf::Color::Transparent);
     mDebugRectangle.setOutlineColor(sf::Color::Red);
-    mDebugRectangle.setOutlineThickness(1.f);
+    mDebugRectangle.setOutlineThickness(0.5f);
 }
 
 QuadTree::~QuadTree()
@@ -82,17 +82,18 @@ std::vector<int> QuadTree::getIndices(Particle* particle)
 {
     std::vector<int> result;
 
-    int index = 0;
-    for (std::unique_ptr<QuadTree>& quad : mChildren)
+    sf::FloatRect nodeBounds = particle->getBoundingRect();
+
+    //for (std::unique_ptr<QuadTree>& quad : mChildren)
+    for (size_t i = 0; i < mChildren.size(); i++)
     {
-        sf::FloatRect nodeBounds = particle->getBoundingRect();
+        QuadTree* quad = mChildren[i].get();
+
         bool isIntersectsWithQuad = quad->mBounds.intersects(nodeBounds);
         if (isIntersectsWithQuad)
         {
-            result.push_back(index);
+            result.push_back(i);
         }
-
-        ++index;
     }
 
     return result;
@@ -134,13 +135,21 @@ void QuadTree::insert(Particle* particle)
 
 void QuadTree::retrieve(std::set<Particle*>& possibleCollisions, Particle* particle)
 {
+    PhysicsService* physics = ServiceProvider::getPhysicsService();
+
     if (mChildren.empty())
     {
         for (Particle* object : mObjects)
         {
             if (object != particle)
             {
-                possibleCollisions.insert(object);
+                //possibleCollisions.insert(object);
+
+                bool interact = physics->isInteract(particle, object);
+                if (interact)
+                {
+                    possibleCollisions.insert(object);
+                }
             }
         }
     }

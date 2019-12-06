@@ -22,6 +22,10 @@ public:
     float getGravitation() const;
     float getParticleSpawnPeriod() const;
 
+    float getECoef() const;
+    int getRepelPow() const;
+    int getAttractPow() const;
+
     const DebugConfig& getDebugConfig() const;
 
 private:
@@ -51,6 +55,10 @@ private:
 
     float mGravitation = 1.f;
     float mParticleSpawnPeriod = 0.1f;
+
+    float mECoef = 1.f;
+    int mRepelPow = 12;
+    int mAttractPow = 6;
 
     DebugConfig mDebugConfig;
 };

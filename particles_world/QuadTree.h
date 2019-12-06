@@ -28,8 +28,8 @@ public:
     void drawCurrent();
 
 private:
-    int mMaxLevel = 5;
-    int mMaxObjects = 5;
+    int mMaxLevel = 4;
+    int mMaxObjects = 10;
     std::vector<std::unique_ptr<QuadTree>> mChildren;
     std::set<Particle*> mObjects;
     sf::FloatRect mBounds;

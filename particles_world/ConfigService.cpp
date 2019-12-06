@@ -48,6 +48,10 @@ bool ConfigService::init()
     mGravitation = document["gravitation_force"].GetFloat();
     mParticleSpawnPeriod = document["particle_spawn_period"].GetFloat();
 
+    mECoef = document["e_coef"].GetFloat();
+    mRepelPow = document["repel_power"].GetInt();
+    mAttractPow = document["attract_power"].GetInt();
+
     mDebugConfig.debugP1PosX = document["debug_p1_pos_x"].GetFloat();
     mDebugConfig.debugP1PosY = document["debug_p1_pos_y"].GetFloat();
     mDebugConfig.debugP2PosX = document["debug_p2_pos_x"].GetFloat();
@@ -115,6 +119,21 @@ float ConfigService::getGravitation() const
 float ConfigService::getParticleSpawnPeriod() const
 {
     return mParticleSpawnPeriod;
+}
+
+float ConfigService::getECoef() const
+{
+    return mECoef;
+}
+
+int ConfigService::getRepelPow() const
+{
+    return mRepelPow;
+}
+
+int ConfigService::getAttractPow() const
+{
+    return mAttractPow;
 }
 
 const DebugConfig& ConfigService::getDebugConfig() const
