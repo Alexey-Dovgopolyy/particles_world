@@ -69,20 +69,11 @@ void World::update(float dt)
 //         physics->retrievePossibleCollisions(particle);
 //     }
     
+    physics->applyGravity(mParticles);
     physics->resolveCollisions(mParticles);
     physics->applyForces();
-
-    float gravitationForce = ServiceProvider::getConfigService()->getGravitation();
-
-    for (Particle* particle : mParticles)
-    {
-        Force gravitation;
-        gravitation.setDirection(sf::Vector2f(0.f, 1.f));
-        gravitation.setAmount(gravitationForce);
-
-        particle->applyForce(gravitation);
-    }
-
+    physics->dealWithWalls(mParticles);
+    
     for (Particle* particle : mParticles)
     {
         particle->update(dt);

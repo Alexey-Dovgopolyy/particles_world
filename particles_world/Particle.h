@@ -45,5 +45,6 @@ private:
     sf::Vector2f mDirection;
     float mSpeed = 0.f;
     sf::FloatRect mBounds;
+    sf::Vector2f mGravityVec;
 };
 

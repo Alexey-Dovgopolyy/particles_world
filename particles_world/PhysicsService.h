@@ -22,10 +22,12 @@ public:
     void draw();
 
     void applyForces();
-    void interaction_2(Particle& particle, Particle& other);
-    static void interaction(Particle& particle1, Particle& particle2);
+    void interaction(Particle& particle, Particle& other);
+    void dealWithWalls(std::vector<Particle*>& particles);
+    void applyGravity(std::vector<Particle*>& particles);
+
     static bool isInteract(Particle* particle1, Particle* particle2);
-    static void collide(Particle& particle1, Particle& particle2);
+    void collide(Particle& particle1, Particle& particle2);
     static sf::Vector2f calculateReflectVector(const sf::Vector2f& wall, Particle& particle);
 
 private:
