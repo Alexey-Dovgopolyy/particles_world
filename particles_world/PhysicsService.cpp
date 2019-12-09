@@ -39,7 +39,6 @@ void PhysicsService::retrievePossibleCollisions(Particle* particle)
 
     for (Particle* particleToCheck : possibleCollisions)
     {
-        //bool iteract = isIteract(particle, particleToCheck);
         bool isCollisionWasResolved = false;
 
         auto it = mResolvedCollisions.find(particleToCheck);
@@ -49,7 +48,7 @@ void PhysicsService::retrievePossibleCollisions(Particle* particle)
             isCollisionWasResolved = (resolved.find(particle) != resolved.end());
         }
         
-        bool needResolve = (/*iteract && */!isCollisionWasResolved && particle != particleToCheck);
+        bool needResolve = (!isCollisionWasResolved && particle != particleToCheck);
         if (needResolve)
         {
             interaction(*particle, *particleToCheck);
@@ -98,20 +97,23 @@ void PhysicsService::interaction(Particle& particle1, Particle& particle2)
     float eCoef = config->getECoef();
     int repelPow = config->getRepelPow();
     int attractPow = config->getAttractPow();
+    float attractRadius = config->getAttractionRadius();
+    float collideRadius = config->getCollideRadius();
+    float noForceDistCoef = config->getNoForceDistCoef();
 
-    float noForceRadius = particleRadius * 2.5f;
+    float noForceRadius = particleRadius * noForceDistCoef;
     float valCoef = noForceRadius / distance;
 
-    if (distance > particleRadius * 3.f)
+    if (distance > particleRadius * attractRadius)
     {
         return;
     }
 
-    if (distance <= particleRadius * 2.f)
+    if (distance <= particleRadius * collideRadius)
     {
         collide(particle1, particle2);
 
-        float distanceDiff = (particleRadius * 2.f) - distance;
+        float distanceDiff = (particleRadius * collideRadius) - distance;
         distanceDiff /= 2.f;
 
         sf::Vector2f moveP2 = Math::normalize(vecToP2) * distanceDiff;

@@ -35,7 +35,7 @@ public:
     void update(float dt);
     void draw();
 
-    const sf::FloatRect& getBoundingRect() const;
+    const sf::FloatRect& getBoundingRect();
 
 private:
     sf::CircleShape mCircle;
@@ -45,6 +45,5 @@ private:
     sf::Vector2f mDirection;
     float mSpeed = 0.f;
     sf::FloatRect mBounds;
-    sf::Vector2f mGravityVec;
 };
 

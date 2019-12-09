@@ -18,6 +18,9 @@
     "repel_power": 11,
     "attract_power": 6,
 
+    "collide_dist": 2.0,
+    "no_force_dist_coef": 2.5,
+
     "debug_p1_pos_x": 400.0,
     "debug_p1_pos_y": 300.0,
     "debug_p2_pos_x": 415.0,

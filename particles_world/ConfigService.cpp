@@ -52,6 +52,9 @@ bool ConfigService::init()
     mRepelPow = document["repel_power"].GetInt();
     mAttractPow = document["attract_power"].GetInt();
 
+    mCollideRadius = document["collide_dist"].GetFloat();
+    mNoForceDistCoef = document["no_force_dist_coef"].GetFloat();
+
     mDebugConfig.debugP1PosX = document["debug_p1_pos_x"].GetFloat();
     mDebugConfig.debugP1PosY = document["debug_p1_pos_y"].GetFloat();
     mDebugConfig.debugP2PosX = document["debug_p2_pos_x"].GetFloat();
@@ -134,6 +137,16 @@ int ConfigService::getRepelPow() const
 int ConfigService::getAttractPow() const
 {
     return mAttractPow;
+}
+
+float ConfigService::getCollideRadius() const
+{
+    return mCollideRadius;
+}
+
+float ConfigService::getNoForceDistCoef() const
+{
+    return mNoForceDistCoef;
 }
 
 const DebugConfig& ConfigService::getDebugConfig() const

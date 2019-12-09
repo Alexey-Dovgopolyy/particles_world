@@ -26,6 +26,9 @@ public:
     int getRepelPow() const;
     int getAttractPow() const;
 
+    float getCollideRadius() const;
+    float getNoForceDistCoef() const;
+
     const DebugConfig& getDebugConfig() const;
 
 private:
@@ -59,6 +62,9 @@ private:
     float mECoef = 1.f;
     int mRepelPow = 12;
     int mAttractPow = 6;
+
+    float mCollideRadius = 2.f;
+    float mNoForceDistCoef = 2.5f;
 
     DebugConfig mDebugConfig;
 };

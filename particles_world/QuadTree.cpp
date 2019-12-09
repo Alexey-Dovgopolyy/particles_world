@@ -34,7 +34,7 @@ void QuadTree::clear()
         child->clear();
     }
 
-    mChildren.clear();
+    //mChildren.clear();
     mObjects.clear();
 }
 
@@ -84,7 +84,6 @@ std::vector<int> QuadTree::getIndices(Particle* particle)
 
     sf::FloatRect nodeBounds = particle->getBoundingRect();
 
-    //for (std::unique_ptr<QuadTree>& quad : mChildren)
     for (size_t i = 0; i < mChildren.size(); i++)
     {
         QuadTree* quad = mChildren[i].get();

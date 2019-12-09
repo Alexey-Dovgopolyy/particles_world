@@ -30,11 +30,11 @@ void Particle::setRadius(float radius)
     mCircle.setRadius(radius);
     mCircle.setOrigin(sf::Vector2f(radius, radius));
 
-    mAttractionCircle.setRadius(attractionRadius);
-    mAttractionCircle.setOrigin(sf::Vector2f(attractionRadius, attractionRadius));
-
-    mRepelCircle.setRadius(repelRadius);
-    mRepelCircle.setOrigin(sf::Vector2f(repelRadius, repelRadius));
+//     mAttractionCircle.setRadius(attractionRadius);
+//     mAttractionCircle.setOrigin(sf::Vector2f(attractionRadius, attractionRadius));
+// 
+//     mRepelCircle.setRadius(repelRadius);
+//     mRepelCircle.setOrigin(sf::Vector2f(repelRadius, repelRadius));
 }
 
 float Particle::getRadius() const
@@ -76,8 +76,8 @@ const sf::Vector2f& Particle::getDirection() const
 void Particle::setColor(sf::Color color)
 {
     mCircle.setFillColor(color);
-    mAttractionCircle.setFillColor(sf::Color(46, 139, 87, 100));
-    mRepelCircle.setFillColor(sf::Color(0, 0, 50, 40));
+//     mAttractionCircle.setFillColor(sf::Color(46, 139, 87, 100));
+//     mRepelCircle.setFillColor(sf::Color(0, 0, 50, 40));
 }
 
 void Particle::setMoveVector(const sf::Vector2f& moveVector)
@@ -137,7 +137,12 @@ void Particle::draw()
     window->draw(mCircle);
 }
 
-const sf::FloatRect& Particle::getBoundingRect() const
+const sf::FloatRect& Particle::getBoundingRect()
 {
-    return mAttractionCircle.getGlobalBounds();
+    float attractionRad = ServiceProvider::getConfigService()->getAttractionRadius();
+
+    mBounds.left = mPosition.x - attractionRad;
+    mBounds.top = mPosition.y - attractionRad;
+
+    return mBounds;
 }
