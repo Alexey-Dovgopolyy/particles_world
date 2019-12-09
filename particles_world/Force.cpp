@@ -12,6 +12,11 @@ Force::Force(const sf::Vector2f& direction, float amount)
     calculateForceVector();
 }
 
+Force::Force(const sf::Vector2f& forceVector)
+{
+    setForce(forceVector);
+}
+
 Force::~Force()
 {
 }
@@ -36,6 +41,14 @@ void Force::setAmount(float amount)
 float Force::getAmount() const
 {
     return mAmount;
+}
+
+void Force::setForce(const sf::Vector2f& force)
+{
+    float amount = Math::vectorLength(force);
+    setDirection(force);
+    setAmount(amount);
+    mForceVector = force;
 }
 
 const sf::Vector2f& Force::getForceVector() const

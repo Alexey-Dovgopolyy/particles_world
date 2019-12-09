@@ -17,13 +17,17 @@ public:
     void retrieve(std::set<Particle*>& possibleCollisions, Particle* particle);
 
     void retrievePossibleCollisions(Particle* particle);
-    void resolveCollisions();
+    void resolveCollisions(std::vector<Particle*>& particles);
 
     void draw();
 
-    static void iteraction(Particle& particle1, Particle& particle2);
-    static bool isIteract(Particle* particle1, Particle* particle2);
-    static void collide(Particle& particle1, Particle& particle2);
+    void applyForces();
+    void interaction(Particle& particle, Particle& other);
+    void dealWithWalls(std::vector<Particle*>& particles);
+    void applyGravity(std::vector<Particle*>& particles);
+
+    static bool isInteract(Particle* particle1, Particle* particle2);
+    void collide(Particle& particle1, Particle& particle2);
     static sf::Vector2f calculateReflectVector(const sf::Vector2f& wall, Particle& particle);
 
 private:
@@ -39,6 +43,8 @@ private:
 private:
     QuadTree mQuadTree;
     std::set<Particle*> mCollisions;
+
+    std::map<Particle*, sf::Vector2f> mForces;
 
     std::map<Particle*, std::set<Particle*>> mResolvedCollisions;
 

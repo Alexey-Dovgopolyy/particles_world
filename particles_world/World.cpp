@@ -59,29 +59,21 @@ void World::update(float dt)
     PhysicsService* physics = ServiceProvider::getPhysicsService();
     physics->clear();
     
-    for (Particle* particle : mParticles)
-    {
-        physics->insert(particle);
-    }
-
-    for (Particle* particle : mParticles)
-    {
-        physics->retrievePossibleCollisions(particle);
-    }
+//     for (Particle* particle : mParticles)
+//     {
+//         physics->insert(particle);
+//     }
+// 
+//     for (Particle* particle : mParticles)
+//     {
+//         physics->retrievePossibleCollisions(particle);
+//     }
     
-    physics->resolveCollisions();
-
-    float gravitationForce = ServiceProvider::getConfigService()->getGravitation();
-
-    for (Particle* particle : mParticles)
-    {
-        Force gravitation;
-        gravitation.setDirection(sf::Vector2f(0.f, 1.f));
-        gravitation.setAmount(gravitationForce);
-
-        particle->applyForce(gravitation);
-    }
-
+    physics->applyGravity(mParticles);
+    physics->resolveCollisions(mParticles);
+    physics->applyForces();
+    physics->dealWithWalls(mParticles);
+    
     for (Particle* particle : mParticles)
     {
         particle->update(dt);
@@ -90,6 +82,8 @@ void World::update(float dt)
 
 void World::draw()
 {
+    ServiceProvider::getPhysicsService()->draw();
+
     sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
     window->draw(mSpawnZone);
 
@@ -97,8 +91,6 @@ void World::draw()
     {
         particle->draw();
     }
-
-    ServiceProvider::getPhysicsService()->draw();
 }
 
 void World::handleMessage(MessageType messageType, Message* message)
@@ -136,7 +128,9 @@ void World::handleMessage(MessageType messageType, Message* message)
 
     if (messageType == MessageType::spawnParticle)
     {
-        if (mUpdateTime > 0.01f)
+        float spawnPeriod = ServiceProvider::getConfigService()->getParticleSpawnPeriod();
+
+        if (mUpdateTime > spawnPeriod)
         {
             resetUpdateTime();
             createParticle(mSpawnZone.getPosition(), mSpawnRadius);

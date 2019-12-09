@@ -4,6 +4,9 @@
 
 #include <SFML/Graphics/Rect.hpp>
 
+#include <iostream>
+#include <cmath>
+
 PhysicsService* PhysicsService::sInstance = nullptr;
 
 PhysicsService::PhysicsService()
@@ -15,6 +18,7 @@ void PhysicsService::clear()
 {
     mQuadTree.clear();
     mResolvedCollisions.clear();
+    mForces.clear();
 }
 
 void PhysicsService::insert(Particle* particle)
@@ -35,7 +39,6 @@ void PhysicsService::retrievePossibleCollisions(Particle* particle)
 
     for (Particle* particleToCheck : possibleCollisions)
     {
-        bool iteract = isIteract(particle, particleToCheck);
         bool isCollisionWasResolved = false;
 
         auto it = mResolvedCollisions.find(particleToCheck);
@@ -45,37 +48,31 @@ void PhysicsService::retrievePossibleCollisions(Particle* particle)
             isCollisionWasResolved = (resolved.find(particle) != resolved.end());
         }
         
-        bool needResolve = (iteract && !isCollisionWasResolved);
-
-        //bool isInteract = particleToCheck->getBoundingRect().intersects(node->getBoundingRect());
+        bool needResolve = (!isCollisionWasResolved && particle != particleToCheck);
         if (needResolve)
         {
-            //mCollisions.insert(particle);
-            //mCollisions.insert(particleToCheck);
-
-            iteraction(*particle, *particleToCheck);
-
-            mResolvedCollisions[particle].insert(particleToCheck);
+            interaction(*particle, *particleToCheck);
         }
+
+        mResolvedCollisions[particle].insert(particleToCheck);
     }
 }
 
-void PhysicsService::resolveCollisions()
+void PhysicsService::resolveCollisions(std::vector<Particle*>& particles)
 {
-//     std::vector<Particle*> particles(mCollisions.begin(), mCollisions.end());
-// 
-//     for (size_t i = 0; i < particles.size(); i++)
-//     {
-//         for (size_t j = i + 1; j < particles.size(); j++)
-//         {
-//             Particle* particle1 = particles[i];
-//             Particle* particle2 = particles[j];
-// 
-//             iteraction(*particle1, *particle2);
-//         }
-//     }
-// 
-//     mCollisions.clear();
+    for (size_t i = 0; i < particles.size(); i++)
+    {
+        for (size_t j = i + 1; j < particles.size(); j++)
+        {
+            Particle* p1 = particles[i];
+            Particle* p2 = particles[j];
+
+            if (isInteract(p1, p2))
+            {
+                interaction(*p1, *p2);
+            }
+        }
+    }
 }
 
 void PhysicsService::draw()
@@ -83,68 +80,131 @@ void PhysicsService::draw()
     mQuadTree.drawCurrent();
 }
 
-void PhysicsService::iteraction(Particle& particle1, Particle& particle2)
+void PhysicsService::interaction(Particle& particle1, Particle& particle2)
 {
     const sf::Vector2f& particlePos1 = particle1.getPosition();
     const sf::Vector2f& particlePos2 = particle2.getPosition();
 
-    sf::Vector2f attractDir = particlePos2 - particlePos1;
-    float distance = Math::vectorLength(attractDir);
+    sf::Vector2f vecToP1 = particlePos1 - particlePos2;
+    sf::Vector2f vecToP2 = particlePos2 - particlePos1;
+
+    float distance = Math::vectorLength(vecToP1);
 
     ConfigService* config = ServiceProvider::getConfigService();
 
-    float attractionRadius = config->getAttractionRadius();
-    float attractionCoef = config->getAttractionCoef();
-    float repelRadius = config->getRepelRadius();
-    float repelCoef = config->getRepelCoef();
     float particleRadius = config->getParticleRadius();
 
-    bool isAttracting = (distance <= attractionRadius && distance > repelRadius);
-    bool isRepelling = (distance <= repelRadius && distance > (particleRadius * 2.f));
-    bool isCollide = (distance <= (particleRadius * 2.f));
+    float eCoef = config->getECoef();
+    int repelPow = config->getRepelPow();
+    int attractPow = config->getAttractPow();
+    float attractRadius = config->getAttractionRadius();
+    float collideRadius = config->getCollideRadius();
+    float noForceDistCoef = config->getNoForceDistCoef();
 
-    if (isAttracting)
+    float noForceRadius = particleRadius * noForceDistCoef;
+    float valCoef = noForceRadius / distance;
+
+    if (distance > particleRadius * attractRadius)
     {
-        float attractionForceAmount = attractionRadius - distance;
-        attractionForceAmount *= attractionCoef;
-
-        Force attractionForce(attractDir, attractionForceAmount);
-
-        particle1.applyForce(attractionForce);
-
-        attractionForce.setDirection(-1.f * attractDir);
-        particle2.applyForce(attractionForce);
+        return;
     }
-    else if (isRepelling)
-    {
-        sf::Vector2f repellingVector1 = particlePos1 - particlePos2;
-        sf::Vector2f repellingVector2 = particlePos2 - particlePos1;
 
-        float repellingForceAmount = repelRadius - distance;
-        repellingForceAmount *= repelCoef;
-
-        Force repelForce1(repellingVector1, repellingForceAmount);
-        Force repelForce2(repellingVector2, repellingForceAmount);
-
-        particle1.applyForce(repelForce1);
-        particle2.applyForce(repelForce2);
-    }
-    else if (isCollide)
+    if (distance <= particleRadius * collideRadius)
     {
         collide(particle1, particle2);
 
-        float distanceDiff = (particleRadius * 2.f) - distance;
+        float distanceDiff = (particleRadius * collideRadius) - distance;
         distanceDiff /= 2.f;
 
-        sf::Vector2f moveP2 = Math::normalize(attractDir) * distanceDiff;
+        sf::Vector2f moveP2 = Math::normalize(vecToP2) * distanceDiff;
         sf::Vector2f moveP1 = (-1.f * moveP2) * distanceDiff;
 
         particle1.moveBy(moveP1);
         particle2.moveBy(moveP2);
+
+        return;
+    }
+
+    float forceAmount = eCoef * (pow(valCoef, repelPow) - 2.f * pow(valCoef, attractPow));
+
+    Force repelForce1(vecToP1, forceAmount);
+    Force repelForce2(vecToP2, forceAmount);
+
+    mForces[&particle1] += repelForce1.getForceVector();
+    mForces[&particle2] += repelForce2.getForceVector();
+}
+
+void PhysicsService::dealWithWalls(std::vector<Particle*>& particles)
+{
+    ConfigService* config = ServiceProvider::getConfigService();
+    float width = config->getWinSizeX();
+    float height = config->getWinSizeY();
+    float particleRad = config->getParticleRadius();
+
+    for (Particle* particle : particles)
+    {
+        bool isWallHitted = false;
+
+        sf::Vector2f pos = particle->getPosition();
+        if (pos.y + particleRad >= height)
+        {
+            isWallHitted = true;
+            sf::Vector2f moveVec = particle->getMoveVector();
+            moveVec.y *= -1.f;
+            particle->setMoveVector(moveVec);
+            pos.y = height - particleRad;
+        }
+
+        if (pos.y - particleRad <= 0.f)
+        {
+            isWallHitted = true;
+            sf::Vector2f moveVec = particle->getMoveVector();
+            moveVec.y *= -1.f;
+            particle->setMoveVector(moveVec);
+            pos.y = particleRad;
+        }
+
+        if (pos.x + particleRad >= width)
+        {
+            isWallHitted = true;
+            sf::Vector2f moveVec = particle->getMoveVector();
+            moveVec.x *= -1.f;
+            particle->setMoveVector(moveVec);
+            pos.x = width - particleRad;
+        }
+
+        if (pos.x - particleRad <= 0.f)
+        {
+            isWallHitted = true;
+            sf::Vector2f moveVec = particle->getMoveVector();
+            moveVec.x *= -1.f;
+            particle->setMoveVector(moveVec);
+            pos.x = particleRad;
+        }
+
+        if (isWallHitted)
+        {
+            particle->setMoveVector(particle->getMoveVector() * 0.95f);
+            particle->setPosition(pos);
+        }
     }
 }
 
-bool PhysicsService::isIteract(Particle* particle1, Particle* particle2)
+void PhysicsService::applyGravity(std::vector<Particle*>& particles)
+{
+    float gravitationForce = ServiceProvider::getConfigService()->getGravitation();
+
+    for (Particle* particle : particles)
+    {
+        Force gravitation;
+        gravitation.setDirection(sf::Vector2f(0.f, 1.f));
+        gravitation.setAmount(gravitationForce);
+
+        mForces[particle] += gravitation.getForceVector();
+    }
+}
+
+bool PhysicsService::isInteract(Particle* particle1, Particle* particle2)
 {
     const sf::Vector2f& particlePos1 = particle1->getPosition();
     const sf::Vector2f& particlePos2 = particle2->getPosition();
@@ -154,6 +214,7 @@ bool PhysicsService::isIteract(Particle* particle1, Particle* particle2)
 
     ConfigService* config = ServiceProvider::getConfigService();
 
+    float particleRadius = config->getParticleRadius();
     float attractionRadius = config->getAttractionRadius();
 
     bool result = (distance <= attractionRadius);
@@ -186,8 +247,6 @@ void PhysicsService::collide(Particle& particle1, Particle& particle2)
     sf::Vector2f newDirection1 = projPerpToCollision1 + projMoveToCollision2;
     sf::Vector2f newDirection2 = projPerpToCollision2 + projMoveToCollision1;
 
-    ConfigService* config = ServiceProvider::getConfigService();
-
     particle1.setMoveVector(newDirection1);
     particle2.setMoveVector(newDirection2);
 }
@@ -205,6 +264,17 @@ sf::Vector2f PhysicsService::calculateReflectVector(const sf::Vector2f& wall, Pa
     Math::normalizeThis(reflectVector);
 
     return reflectVector;
+}
+
+void PhysicsService::applyForces()
+{
+    for (auto& data : mForces)
+    {
+        Particle* particle = data.first;
+        const sf::Vector2f& forceVector = data.second;
+        Force force(forceVector);
+        particle->applyForce(force);
+    }
 }
 
 bool PhysicsService::init()
