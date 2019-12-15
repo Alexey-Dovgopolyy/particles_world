@@ -2,8 +2,8 @@
     "win_size_x": 800,
     "win_size_y": 600,
 
-    "attraction_radius": 30.0,
-    "attraction_coef": 0.02,
+    "attraction_radius": 3.0,
+    "attraction_coef": 0.6,
 
     "repel_radius": 15.0,
     "repel_coef": 0.02,

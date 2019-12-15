@@ -39,8 +39,6 @@ public:
 
 private:
     sf::CircleShape mCircle;
-    sf::CircleShape mAttractionCircle;
-    sf::CircleShape mRepelCircle;
     sf::Vector2f mPosition;
     sf::Vector2f mDirection;
     float mSpeed = 0.f;

@@ -27,6 +27,11 @@ void QuadTree::setLevel(int level)
     mLevel = level;
 }
 
+bool QuadTree::intesects(const sf::FloatRect& bounds)
+{
+    return mBounds.intersects(bounds);
+}
+
 void QuadTree::clear()
 {
     for (std::unique_ptr<QuadTree>& child : mChildren)
@@ -34,7 +39,7 @@ void QuadTree::clear()
         child->clear();
     }
 
-    //mChildren.clear();
+    mChildren.clear();
     mObjects.clear();
 }
 
@@ -100,9 +105,18 @@ std::vector<int> QuadTree::getIndices(Particle* particle)
 
 void QuadTree::insert(Particle* particle)
 {
-    if (mChildren.empty())
+    if (!mChildren.empty())
     {
-        mObjects.insert(particle);
+        const sf::FloatRect& particleBounds = particle->getBoundingRect();
+
+        if (mChildren[0]->intesects(particleBounds)) mChildren[0]->insert(particle);
+        if (mChildren[1]->intesects(particleBounds)) mChildren[1]->insert(particle);
+        if (mChildren[2]->intesects(particleBounds)) mChildren[2]->insert(particle);
+        if (mChildren[3]->intesects(particleBounds)) mChildren[3]->insert(particle);
+    }
+    else
+    {
+        mObjects.push_back(particle);
 
         if (mObjects.size() > mMaxObjects && mLevel < mMaxLevel)
         {
@@ -110,66 +124,36 @@ void QuadTree::insert(Particle* particle)
 
             for (Particle* object : mObjects)
             {
-                std::vector<int> quadIndices = getIndices(object);
-
-                for (int index : quadIndices)
-                {
-                    mChildren[index]->insert(object);
-                }
+                insert(object);
             }
 
             mObjects.clear();
         }
     }
-    else
-    {
-        std::vector<int> quadIndices = getIndices(particle);
-
-        for (int index : quadIndices)
-        {
-            mChildren[index]->insert(particle);
-        }
-    }
 }
 
-void QuadTree::retrieve(std::set<Particle*>& possibleCollisions, Particle* particle)
+void QuadTree::retrieve(std::vector<std::vector<Particle*>>& possibleCollisions)
 {
-    PhysicsService* physics = ServiceProvider::getPhysicsService();
-
-    if (mChildren.empty())
+    if (mChildren.empty() && !mObjects.empty())
     {
-        for (Particle* object : mObjects)
-        {
-            if (object != particle)
-            {
-                //possibleCollisions.insert(object);
-
-                bool interact = physics->isInteract(particle, object);
-                if (interact)
-                {
-                    possibleCollisions.insert(object);
-                }
-            }
-        }
+        possibleCollisions.push_back(mObjects);
     }
     else
     {
-        std::vector<int> entityQuads = getIndices(particle);
-
-        for (int quadIndex : entityQuads)
+        for (std::unique_ptr<QuadTree>& child : mChildren)
         {
-            mChildren[quadIndex]->retrieve(possibleCollisions, particle);
+            child->retrieve(possibleCollisions);
         }
     }
 }
 
 void QuadTree::drawCurrent()
 {
-//     sf::RectangleShape debugRectangle;
-//     debugRectangle.setFillColor(sf::Color::Yellow);
-//     debugRectangle.setOutlineColor(sf::Color::Red);
-//     debugRectangle.setOutlineThickness(2.f);
-//     debugRectangle.setPosition(sf::Vector2f(mBounds.left, mBounds.top));
+    sf::RectangleShape debugRectangle;
+    debugRectangle.setFillColor(sf::Color::Yellow);
+    debugRectangle.setOutlineColor(sf::Color::Red);
+    debugRectangle.setOutlineThickness(2.f);
+    debugRectangle.setPosition(sf::Vector2f(mBounds.left, mBounds.top));
 
     sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
     window->draw(mDebugRectangle);

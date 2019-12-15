@@ -26,50 +26,42 @@ void PhysicsService::insert(Particle* particle)
     mQuadTree.insert(particle);
 }
 
-void PhysicsService::retrieve(std::set<Particle*>& possibleCollisions, Particle* particle)
+void PhysicsService::retrieve(std::vector<std::vector<Particle*>>& possibleCollisions, Particle* particle)
 {
-    mQuadTree.retrieve(possibleCollisions, particle);
+    mQuadTree.retrieve(possibleCollisions);
 }
 
-void PhysicsService::retrievePossibleCollisions(Particle* particle)
+void PhysicsService::resolveCollisions()
 {
-    std::set<Particle*> possibleCollisions;
+    std::vector<std::vector<Particle*>> possibleCollisions;
 
-    mQuadTree.retrieve(possibleCollisions, particle);
+    mQuadTree.retrieve(possibleCollisions);
 
-    for (Particle* particleToCheck : possibleCollisions)
+    for (std::vector<Particle*>& particles : possibleCollisions)
     {
-        bool isCollisionWasResolved = false;
-
-        auto it = mResolvedCollisions.find(particleToCheck);
-        if (it != mResolvedCollisions.end())
+        for (size_t i = 0; i < particles.size(); i++)
         {
-            const std::set<Particle*>& resolved = it->second;
-            isCollisionWasResolved = (resolved.find(particle) != resolved.end());
-        }
-        
-        bool needResolve = (!isCollisionWasResolved && particle != particleToCheck);
-        if (needResolve)
-        {
-            interaction(*particle, *particleToCheck);
-        }
-
-        mResolvedCollisions[particle].insert(particleToCheck);
-    }
-}
-
-void PhysicsService::resolveCollisions(std::vector<Particle*>& particles)
-{
-    for (size_t i = 0; i < particles.size(); i++)
-    {
-        for (size_t j = i + 1; j < particles.size(); j++)
-        {
-            Particle* p1 = particles[i];
-            Particle* p2 = particles[j];
-
-            if (isInteract(p1, p2))
+            for (size_t j = i + 1; j < particles.size(); j++)
             {
-                interaction(*p1, *p2);
+                Particle* p1 = particles[i];
+                Particle* p2 = particles[j];
+
+                bool isCollisionWasResolved = false;
+
+                auto it = mResolvedCollisions.find(p1);
+                if (it != mResolvedCollisions.end())
+                {
+                    const std::set<Particle*>& resolved = it->second;
+                    isCollisionWasResolved = (resolved.find(p2) != resolved.end());
+                }
+
+                if (!isCollisionWasResolved)
+                {
+                    if (interaction(*p1, *p2))
+                    {
+                        mResolvedCollisions[p1].insert(p2);
+                    }
+                }
             }
         }
     }
@@ -80,7 +72,7 @@ void PhysicsService::draw()
     mQuadTree.drawCurrent();
 }
 
-void PhysicsService::interaction(Particle& particle1, Particle& particle2)
+bool PhysicsService::interaction(Particle& particle1, Particle& particle2)
 {
     const sf::Vector2f& particlePos1 = particle1.getPosition();
     const sf::Vector2f& particlePos2 = particle2.getPosition();
@@ -106,7 +98,7 @@ void PhysicsService::interaction(Particle& particle1, Particle& particle2)
 
     if (distance > particleRadius * attractRadius)
     {
-        return;
+        return false;
     }
 
     if (distance <= particleRadius * collideRadius)
@@ -122,7 +114,7 @@ void PhysicsService::interaction(Particle& particle1, Particle& particle2)
         particle1.moveBy(moveP1);
         particle2.moveBy(moveP2);
 
-        return;
+        return true;
     }
 
     float forceAmount = eCoef * (pow(valCoef, repelPow) - 2.f * pow(valCoef, attractPow));
@@ -132,6 +124,8 @@ void PhysicsService::interaction(Particle& particle1, Particle& particle2)
 
     mForces[&particle1] += repelForce1.getForceVector();
     mForces[&particle2] += repelForce2.getForceVector();
+
+    return true;
 }
 
 void PhysicsService::dealWithWalls(std::vector<Particle*>& particles)
@@ -204,7 +198,7 @@ void PhysicsService::applyGravity(std::vector<Particle*>& particles)
     }
 }
 
-bool PhysicsService::isInteract(Particle* particle1, Particle* particle2)
+bool PhysicsService::isParticlesInteract(Particle* particle1, Particle* particle2)
 {
     const sf::Vector2f& particlePos1 = particle1->getPosition();
     const sf::Vector2f& particlePos2 = particle2->getPosition();

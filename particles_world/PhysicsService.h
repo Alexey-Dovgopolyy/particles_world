@@ -14,19 +14,18 @@ class PhysicsService
 public:
     void clear();
     void insert(Particle* particle);
-    void retrieve(std::set<Particle*>& possibleCollisions, Particle* particle);
+    void retrieve(std::vector<std::vector<Particle*>>& possibleCollisions, Particle* particle);
 
-    void retrievePossibleCollisions(Particle* particle);
-    void resolveCollisions(std::vector<Particle*>& particles);
+    void resolveCollisions();
 
     void draw();
 
     void applyForces();
-    void interaction(Particle& particle, Particle& other);
+    bool interaction(Particle& particle, Particle& other);
     void dealWithWalls(std::vector<Particle*>& particles);
     void applyGravity(std::vector<Particle*>& particles);
 
-    static bool isInteract(Particle* particle1, Particle* particle2);
+    static bool isParticlesInteract(Particle* particle1, Particle* particle2);
     void collide(Particle& particle1, Particle& particle2);
     static sf::Vector2f calculateReflectVector(const sf::Vector2f& wall, Particle& particle);
 

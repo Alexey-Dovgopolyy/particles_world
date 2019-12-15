@@ -5,17 +5,16 @@
 Particle::Particle()
 {
     mCircle.setFillColor(sf::Color::White);
-    mAttractionCircle.setFillColor(sf::Color(46, 139, 87, 35));
-    mRepelCircle.setFillColor(sf::Color(65, 105, 225, 70));
 
     float attractionRadius = ServiceProvider::getConfigService()->getAttractionRadius();
+    float particleRad = ServiceProvider::getConfigService()->getParticleRadius();
 
     sf::Vector2f centerPos = mPosition;
 
-    mBounds.left = mPosition.x - attractionRadius;
-    mBounds.top = mPosition.y - attractionRadius;
-    mBounds.width = attractionRadius * 2.f;
-    mBounds.height = attractionRadius * 2.f;
+    mBounds.left = mPosition.x - particleRad * attractionRadius;
+    mBounds.top = mPosition.y - particleRad * attractionRadius;
+    mBounds.width = attractionRadius * particleRad * 2.f;
+    mBounds.height = attractionRadius * particleRad * 2.f;
 }
 
 Particle::~Particle()
@@ -24,17 +23,16 @@ Particle::~Particle()
 
 void Particle::setRadius(float radius)
 {
-    float attractionRadius = ServiceProvider::getConfigService()->getAttractionRadius();
-    float repelRadius = ServiceProvider::getConfigService()->getRepelRadius();
+    float attractionRad = ServiceProvider::getConfigService()->getAttractionRadius();
+    float particleRad = ServiceProvider::getConfigService()->getParticleRadius();
 
     mCircle.setRadius(radius);
     mCircle.setOrigin(sf::Vector2f(radius, radius));
 
-//     mAttractionCircle.setRadius(attractionRadius);
-//     mAttractionCircle.setOrigin(sf::Vector2f(attractionRadius, attractionRadius));
-// 
-//     mRepelCircle.setRadius(repelRadius);
-//     mRepelCircle.setOrigin(sf::Vector2f(repelRadius, repelRadius));
+    mBounds.left = mPosition.x - particleRad * attractionRad;
+    mBounds.top = mPosition.y - particleRad * attractionRad;
+    mBounds.width = attractionRad * particleRad * 2.f;
+    mBounds.height = attractionRad * particleRad * 2.f;
 }
 
 float Particle::getRadius() const
@@ -76,8 +74,6 @@ const sf::Vector2f& Particle::getDirection() const
 void Particle::setColor(sf::Color color)
 {
     mCircle.setFillColor(color);
-//     mAttractionCircle.setFillColor(sf::Color(46, 139, 87, 100));
-//     mRepelCircle.setFillColor(sf::Color(0, 0, 50, 40));
 }
 
 void Particle::setMoveVector(const sf::Vector2f& moveVector)
@@ -127,11 +123,16 @@ void Particle::draw()
 {
     sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
 
-//     mAttractionCircle.setPosition(mPosition);
-//     window->draw(mAttractionCircle);
+    const sf::FloatRect& rect = getBoundingRect();
+    
+    sf::RectangleShape debugRectangle;
+    debugRectangle.setFillColor(sf::Color::Transparent);
+    debugRectangle.setOutlineColor(sf::Color::Green);
+    debugRectangle.setOutlineThickness(1.f);
+    debugRectangle.setPosition(sf::Vector2f(rect.left, rect.top));
+    debugRectangle.setSize(sf::Vector2f(rect.width, rect.height));
 
-//     mRepelCircle.setPosition(mPosition);
-//     window->draw(mRepelCircle);
+    window->draw(debugRectangle);
 
     mCircle.setPosition(mPosition);
     window->draw(mCircle);
@@ -140,9 +141,10 @@ void Particle::draw()
 const sf::FloatRect& Particle::getBoundingRect()
 {
     float attractionRad = ServiceProvider::getConfigService()->getAttractionRadius();
+    float particleRad = ServiceProvider::getConfigService()->getParticleRadius();
 
-    mBounds.left = mPosition.x - attractionRad;
-    mBounds.top = mPosition.y - attractionRad;
+    mBounds.left = mPosition.x - particleRad * attractionRad;
+    mBounds.top = mPosition.y - particleRad * attractionRad;
 
     return mBounds;
 }

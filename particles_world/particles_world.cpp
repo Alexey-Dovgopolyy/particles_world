@@ -36,19 +36,14 @@ int main()
 
             world->update(sTimePerFrame.asSeconds());
 
-//             window->clear();
-//             world->draw();
-//             window->display();
+            window->clear();
+            world->draw();
+            window->display();
         }
 
-//         inputService->processInput();
-//         communication->executeAll();
-// 
-//         world->update(sTimePerFrame.asSeconds());
-
-        window->clear();
-        world->draw();
-        window->display();
+//         window->clear();
+//         world->draw();
+//         window->display();
     }
 
     ServiceProvider::cleanup();

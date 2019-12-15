@@ -59,18 +59,13 @@ void World::update(float dt)
     PhysicsService* physics = ServiceProvider::getPhysicsService();
     physics->clear();
     
-//     for (Particle* particle : mParticles)
-//     {
-//         physics->insert(particle);
-//     }
-// 
-//     for (Particle* particle : mParticles)
-//     {
-//         physics->retrievePossibleCollisions(particle);
-//     }
-    
+    for (Particle* particle : mParticles)
+    {
+        physics->insert(particle);
+    }
+
+    physics->resolveCollisions();
     physics->applyGravity(mParticles);
-    physics->resolveCollisions(mParticles);
     physics->applyForces();
     physics->dealWithWalls(mParticles);
     

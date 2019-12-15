@@ -18,20 +18,21 @@ public:
 
     void setBounds(const sf::FloatRect& bounds);
     void setLevel(int level);
+    bool intesects(const sf::FloatRect& bounds);
 
     void clear();
     void split();
     std::vector<int> getIndices(Particle* particle);
     void insert(Particle* particle);
-    void retrieve(std::set<Particle*>& possibleCollisions, Particle* particle);
+    void retrieve(std::vector<std::vector<Particle*>>& possibleCollisions);
 
     void drawCurrent();
 
 private:
-    int mMaxLevel = 4;
+    int mMaxLevel = 5;
     int mMaxObjects = 10;
     std::vector<std::unique_ptr<QuadTree>> mChildren;
-    std::set<Particle*> mObjects;
+    std::vector<Particle*> mObjects;
     sf::FloatRect mBounds;
     int mLevel = 0;
 
