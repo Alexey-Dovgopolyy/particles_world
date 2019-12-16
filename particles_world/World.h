@@ -18,6 +18,8 @@ public:
     void update(float dt);
     void draw();
 
+    size_t getParticlesCount() const;
+
     void handleMessage(MessageType messageType, Message* message);
 
 private:

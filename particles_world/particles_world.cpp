@@ -20,7 +20,7 @@ int main()
     World* world = ServiceProvider::getWorldService()->getWorld();
 
     sf::Clock clock;
-    sf::Time timeSinceLastUpdate = sf::Time::Zero;
+    sf::Time timeSinceLastUpdate = sf::Time::Zero; 
 
     while (window->isOpen())
     {
@@ -35,15 +35,16 @@ int main()
             communication->executeAll();
 
             world->update(sTimePerFrame.asSeconds());
-
-            window->clear();
-            world->draw();
-            window->display();
         }
 
-//         window->clear();
-//         world->draw();
-//         window->display();
+        window->clear();
+
+        world->draw();
+
+        ServiceProvider::getDataTextService()->update(dt);
+        ServiceProvider::getDataTextService()->draw();
+
+        window->display();
     }
 
     ServiceProvider::cleanup();

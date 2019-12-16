@@ -88,6 +88,11 @@ void World::draw()
     }
 }
 
+size_t World::getParticlesCount() const
+{
+    return mParticles.size();
+}
+
 void World::handleMessage(MessageType messageType, Message* message)
 {
     if (messageType == MessageType::mouseWheelMoved)
