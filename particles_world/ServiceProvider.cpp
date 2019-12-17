@@ -1,5 +1,13 @@
 #include "ServiceProvider.h"
 
+#include "WindowService.h"
+#include "ConfigService.h"
+#include "InputService.h"
+#include "WorldService.h"
+#include "CommunicationService.h"
+#include "DataTextService.h"
+#include "PhysicsService.h"
+
 #include <iostream>
 
 void ServiceProvider::create()

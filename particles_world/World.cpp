@@ -3,6 +3,10 @@
 #include "common_data.h"
 #include "common_types.h"
 #include "ServiceProvider.h"
+#include "CommunicationService.h"
+#include "ConfigService.h"
+#include "PhysicsService.h"
+#include "WindowService.h"
 
 #include "SFML/Graphics/Color.hpp"
 

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "WindowService.h"
-#include "ConfigService.h"
-#include "InputService.h"
-#include "WorldService.h"
-#include "CommunicationService.h"
-#include "DataTextService.h"
-#include "PhysicsService.h"
+class WindowService;
+class ConfigService;
+class InputService;
+class WorldService;
+class CommunicationService;
+class DataTextService;
+class PhysicsService;
 
 class ServiceProvider
 {

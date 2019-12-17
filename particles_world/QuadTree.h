@@ -16,6 +16,8 @@ public:
     QuadTree();
     ~QuadTree();
 
+    void init();
+
     void setBounds(const sf::FloatRect& bounds);
     void setLevel(int level);
     bool intesects(const sf::FloatRect& bounds);
@@ -26,15 +28,17 @@ public:
     void insert(Particle* particle);
     void retrieve(std::vector<std::vector<Particle*>>& possibleCollisions);
 
-    void drawCurrent();
+    void draw();
 
 private:
     int mMaxLevel = 5;
-    int mMaxObjects = 5;
+    int mMaxObjects = 7;
     std::vector<std::unique_ptr<QuadTree>> mChildren;
     std::vector<Particle*> mObjects;
     sf::FloatRect mBounds;
     int mLevel = 0;
+    //bool mIsExists = false;
+    bool mHasChildren = false;
 
     sf::RectangleShape mDebugRectangle;
 };

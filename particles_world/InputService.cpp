@@ -1,5 +1,7 @@
 #include "InputService.h"
 #include "ServiceProvider.h"
+#include "CommunicationService.h"
+#include "WindowService.h"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>

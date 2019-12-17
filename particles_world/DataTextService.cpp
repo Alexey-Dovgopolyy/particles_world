@@ -1,5 +1,7 @@
 #include "DataTextService.h"
 #include "ServiceProvider.h"
+#include "WorldService.h"
+#include "WindowService.h"
 
 DataTextService* DataTextService::sInstance = nullptr;
 

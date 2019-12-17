@@ -1,5 +1,7 @@
 #include "WindowService.h"
 #include "ServiceProvider.h"
+#include "CommunicationService.h"
+#include "ConfigService.h"
 
 WindowService* WindowService::sInstance = nullptr;
 

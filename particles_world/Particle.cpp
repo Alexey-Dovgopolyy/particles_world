@@ -1,6 +1,10 @@
 #include "Particle.h"
 #include "ServiceProvider.h"
+#include "ConfigService.h"
+#include "WindowService.h"
 #include "Math.h"
+
+#include <SFML/Graphics/RectangleShape.hpp>
 
 Particle::Particle()
 {

@@ -3,6 +3,11 @@
 #include <SFML/System/Time.hpp>
 
 #include "ServiceProvider.h"
+#include "WindowService.h"
+#include "WorldService.h"
+#include "InputService.h"
+#include "CommunicationService.h"
+#include "DataTextService.h"
 #include "World.h"
 
 sf::Time sTimePerFrame = sf::seconds(1.f / 30.f);

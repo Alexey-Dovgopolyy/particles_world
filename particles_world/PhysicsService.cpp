@@ -1,5 +1,6 @@
 #include "PhysicsService.h"
 #include "ServiceProvider.h"
+#include "ConfigService.h"
 #include "Particle.h"
 
 #include <SFML/Graphics/Rect.hpp>
@@ -69,7 +70,7 @@ void PhysicsService::resolveCollisions()
 
 void PhysicsService::draw()
 {
-    mQuadTree.drawCurrent();
+    mQuadTree.draw();
 }
 
 bool PhysicsService::interaction(Particle& particle1, Particle& particle2)
@@ -281,6 +282,7 @@ bool PhysicsService::init()
     quadTreeBounds.height = height;
 
     mQuadTree.setBounds(quadTreeBounds);
+    mQuadTree.init();
 
     return true;
 }

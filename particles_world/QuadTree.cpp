@@ -1,17 +1,34 @@
 #include "QuadTree.h"
 
 #include "ServiceProvider.h"
-
+#include "WindowService.h"
 
 QuadTree::QuadTree()
 {
     mDebugRectangle.setFillColor(sf::Color::Transparent);
     mDebugRectangle.setOutlineColor(sf::Color::Red);
     mDebugRectangle.setOutlineThickness(0.5f);
+
+    mObjects.reserve(mMaxObjects);
 }
 
 QuadTree::~QuadTree()
 {
+}
+
+void QuadTree::init()
+{
+    if (mLevel == mMaxLevel)
+    {
+        return;
+    }
+
+    split();
+
+    for (std::unique_ptr<QuadTree>& child : mChildren)
+    {
+        child->init();
+    }
 }
 
 void QuadTree::setBounds(const sf::FloatRect& bounds)
@@ -39,14 +56,15 @@ void QuadTree::clear()
         child->clear();
     }
 
-    mChildren.clear();
+    //mChildren.clear();
     mObjects.clear();
+    mHasChildren = false;
 }
 
 void QuadTree::split()
 {
     bool canSplit = (mObjects.size() > mMaxObjects && mChildren.empty());
-    if (canSplit)
+    //if (canSplit)
     {
         float boundsMidX = mBounds.left + mBounds.width / 2.f;
         float boundsMidY = mBounds.top + mBounds.height / 2.f;
@@ -105,7 +123,8 @@ std::vector<int> QuadTree::getIndices(Particle* particle)
 
 void QuadTree::insert(Particle* particle)
 {
-    if (!mChildren.empty())
+    //if (!mChildren.empty())
+    if (mHasChildren)
     {
         const sf::FloatRect& particleBounds = particle->getBoundingRect();
 
@@ -120,7 +139,8 @@ void QuadTree::insert(Particle* particle)
 
         if (mObjects.size() > mMaxObjects && mLevel < mMaxLevel)
         {
-            split();
+            //split();
+            mHasChildren = true;
 
             for (Particle* object : mObjects)
             {
@@ -134,7 +154,8 @@ void QuadTree::insert(Particle* particle)
 
 void QuadTree::retrieve(std::vector<std::vector<Particle*>>& possibleCollisions)
 {
-    if (mChildren.empty() && !mObjects.empty())
+    //if (mChildren.empty() && !mObjects.empty())
+    if (!mHasChildren && !mObjects.empty())
     {
         possibleCollisions.push_back(mObjects);
     }
@@ -147,7 +168,7 @@ void QuadTree::retrieve(std::vector<std::vector<Particle*>>& possibleCollisions)
     }
 }
 
-void QuadTree::drawCurrent()
+void QuadTree::draw()
 {
     sf::RectangleShape debugRectangle;
     debugRectangle.setFillColor(sf::Color::Yellow);
@@ -158,8 +179,13 @@ void QuadTree::drawCurrent()
     sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
     window->draw(mDebugRectangle);
 
+    if (mHasChildren == false)
+    {
+        return;
+    }
+
     for (auto& child : mChildren)
     {
-        child->drawCurrent();
+        child->draw();
     }
 }
