@@ -170,22 +170,22 @@ void QuadTree::retrieve(std::vector<std::vector<Particle*>>& possibleCollisions)
 
 void QuadTree::draw()
 {
-    sf::RectangleShape debugRectangle;
-    debugRectangle.setFillColor(sf::Color::Yellow);
-    debugRectangle.setOutlineColor(sf::Color::Red);
-    debugRectangle.setOutlineThickness(2.f);
-    debugRectangle.setPosition(sf::Vector2f(mBounds.left, mBounds.top));
-
-    sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
-    window->draw(mDebugRectangle);
-
     if (mHasChildren == false)
     {
-        return;
-    }
+        sf::RectangleShape debugRectangle;
+        debugRectangle.setFillColor(sf::Color::Yellow);
+        debugRectangle.setOutlineColor(sf::Color::Red);
+        debugRectangle.setOutlineThickness(2.f);
+        debugRectangle.setPosition(sf::Vector2f(mBounds.left, mBounds.top));
 
-    for (auto& child : mChildren)
+        sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
+        window->draw(mDebugRectangle);
+    }
+    else
     {
-        child->draw();
+        for (auto& child : mChildren)
+        {
+            child->draw();
+        }
     }
 }

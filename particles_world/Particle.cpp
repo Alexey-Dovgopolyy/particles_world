@@ -127,16 +127,16 @@ void Particle::draw()
 {
     sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
 
-    const sf::FloatRect& rect = getBoundingRect();
+//     const sf::FloatRect& rect = getBoundingRect();
     
-    sf::RectangleShape debugRectangle;
-    debugRectangle.setFillColor(sf::Color::Transparent);
-    debugRectangle.setOutlineColor(sf::Color::Green);
-    debugRectangle.setOutlineThickness(1.f);
-    debugRectangle.setPosition(sf::Vector2f(rect.left, rect.top));
-    debugRectangle.setSize(sf::Vector2f(rect.width, rect.height));
-
-    window->draw(debugRectangle);
+//     sf::RectangleShape debugRectangle;
+//     debugRectangle.setFillColor(sf::Color::Transparent);
+//     debugRectangle.setOutlineColor(sf::Color::Green);
+//     debugRectangle.setOutlineThickness(1.f);
+//     debugRectangle.setPosition(sf::Vector2f(rect.left, rect.top));
+//     debugRectangle.setSize(sf::Vector2f(rect.width, rect.height));
+// 
+//     window->draw(debugRectangle);
 
     mCircle.setPosition(mPosition);
     window->draw(mCircle);

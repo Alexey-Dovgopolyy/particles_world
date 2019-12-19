@@ -38,6 +38,8 @@ bool World::init()
 
     debugInit();
 
+    mParticles.reserve(1000);
+
     return true;
 }
 

@@ -11,10 +11,11 @@ class DataTextService
     friend class ServiceProvider;
 
 public:
-    void update(sf::Time dt);
+    void update(/*float dt*/);
     void draw();
 
     void setFps(int fps);
+    void setUpdateTime(float time);
 
 private:
     DataTextService();
@@ -29,6 +30,7 @@ private:
 private:
     sf::Text mFps;
     sf::Text mParticlesCount;
+    sf::Text mUpdateTime;
 
     sf::Font mFont;
 

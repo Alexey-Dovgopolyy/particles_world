@@ -10,7 +10,38 @@
 #include "DataTextService.h"
 #include "World.h"
 
+#include <thread>
+
 sf::Time sTimePerFrame = sf::seconds(1.f / 30.f);
+
+void drawThreadFunc()
+{
+    sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
+    World* world = ServiceProvider::getWorldService()->getWorld();
+
+    sf::Clock clock;
+    sf::Time timeSinceLastUpdate = sf::Time::Zero;
+
+    while (window->isOpen())
+    {
+        sf::Time dt = clock.restart();
+        //timeSinceLastUpdate += dt;
+
+        //while (timeSinceLastUpdate > sTimePerFrame)
+        //{
+            //timeSinceLastUpdate -= sTimePerFrame;
+
+            window->clear();
+
+            world->draw();
+
+            //ServiceProvider::getDataTextService()->update();
+            ServiceProvider::getDataTextService()->draw();
+
+            window->display();
+        //}
+    }
+}
 
 int main()
 {
@@ -27,6 +58,11 @@ int main()
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero; 
 
+    sf::Clock updateTimer;
+
+    window->setActive(false);
+    std::thread drawThread(drawThreadFunc);
+
     while (window->isOpen())
     {
         sf::Time dt = clock.restart();
@@ -39,18 +75,16 @@ int main()
             inputService->processInput();
             communication->executeAll();
 
+            updateTimer.restart();
             world->update(sTimePerFrame.asSeconds());
+            float updateTime = updateTimer.restart().asSeconds();
+            ServiceProvider::getDataTextService()->setUpdateTime(updateTime);
+
+            ServiceProvider::getDataTextService()->update();
         }
-
-        window->clear();
-
-        world->draw();
-
-        ServiceProvider::getDataTextService()->update(dt);
-        ServiceProvider::getDataTextService()->draw();
-
-        window->display();
     }
+
+    drawThread.join();
 
     ServiceProvider::cleanup();
 
