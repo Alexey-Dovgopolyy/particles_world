@@ -19,27 +19,12 @@ void drawThreadFunc()
     sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
     World* world = ServiceProvider::getWorldService()->getWorld();
 
-    sf::Clock clock;
-    sf::Time timeSinceLastUpdate = sf::Time::Zero;
-
     while (window->isOpen())
     {
-        sf::Time dt = clock.restart();
-        //timeSinceLastUpdate += dt;
-
-        //while (timeSinceLastUpdate > sTimePerFrame)
-        //{
-            //timeSinceLastUpdate -= sTimePerFrame;
-
-            window->clear();
-
-            world->draw();
-
-            //ServiceProvider::getDataTextService()->update();
-            ServiceProvider::getDataTextService()->draw();
-
-            window->display();
-        //}
+        window->clear();
+        world->draw();
+        ServiceProvider::getDataTextService()->draw();
+        window->display();
     }
 }
 
