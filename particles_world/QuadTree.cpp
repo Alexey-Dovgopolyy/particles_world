@@ -155,7 +155,7 @@ void QuadTree::insert(Particle* particle)
 void QuadTree::retrieve(std::vector<std::vector<Particle*>>& possibleCollisions)
 {
     //if (mChildren.empty() && !mObjects.empty())
-    if (!mHasChildren && !mObjects.empty())
+    if (!mHasChildren && mObjects.size() > size_t(1))
     {
         possibleCollisions.push_back(mObjects);
     }
