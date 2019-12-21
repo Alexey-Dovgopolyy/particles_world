@@ -132,8 +132,8 @@ bool PhysicsService::interaction(Particle& particle1, Particle& particle2)
 void PhysicsService::dealWithWalls(std::vector<Particle*>& particles)
 {
     ConfigService* config = ServiceProvider::getConfigService();
-    float width = config->getWinSizeX();
-    float height = config->getWinSizeY();
+    float width = static_cast<float>(config->getWinSizeX());
+    float height = static_cast<float>(config->getWinSizeY());
     float particleRad = config->getParticleRadius();
 
     for (Particle* particle : particles)
@@ -274,12 +274,12 @@ void PhysicsService::applyForces()
 
 bool PhysicsService::init()
 {
-    float width = ServiceProvider::getConfigService()->getWinSizeX();
-    float height = ServiceProvider::getConfigService()->getWinSizeY();
+    int width = ServiceProvider::getConfigService()->getWinSizeX();
+    int height = ServiceProvider::getConfigService()->getWinSizeY();
 
     sf::FloatRect quadTreeBounds;
-    quadTreeBounds.width = width;
-    quadTreeBounds.height = height;
+    quadTreeBounds.width = static_cast<float>(width);
+    quadTreeBounds.height = static_cast<float>(height);
 
     mQuadTree.setBounds(quadTreeBounds);
     mQuadTree.init();

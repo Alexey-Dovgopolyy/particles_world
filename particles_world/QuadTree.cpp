@@ -56,49 +56,44 @@ void QuadTree::clear()
         child->clear();
     }
 
-    //mChildren.clear();
     mObjects.clear();
     mHasChildren = false;
 }
 
 void QuadTree::split()
 {
-    bool canSplit = (mObjects.size() > mMaxObjects && mChildren.empty());
-    //if (canSplit)
-    {
-        float boundsMidX = mBounds.left + mBounds.width / 2.f;
-        float boundsMidY = mBounds.top + mBounds.height / 2.f;
+    float boundsMidX = mBounds.left + mBounds.width / 2.f;
+    float boundsMidY = mBounds.top + mBounds.height / 2.f;
 
-        float quadWidth = mBounds.width / 2.f;
-        float quadHeight = mBounds.height / 2.f;
+    float quadWidth = mBounds.width / 2.f;
+    float quadHeight = mBounds.height / 2.f;
 
-        sf::FloatRect rectQuad1(boundsMidX, mBounds.top, quadWidth, quadHeight);
-        sf::FloatRect rectQuad2(mBounds.left, mBounds.top, quadWidth, quadHeight);
-        sf::FloatRect rectQuad3(mBounds.left, boundsMidY, quadWidth, quadHeight);
-        sf::FloatRect rectQuad4(boundsMidX, boundsMidY, quadWidth, quadHeight);
+    sf::FloatRect rectQuad1(boundsMidX, mBounds.top, quadWidth, quadHeight);
+    sf::FloatRect rectQuad2(mBounds.left, mBounds.top, quadWidth, quadHeight);
+    sf::FloatRect rectQuad3(mBounds.left, boundsMidY, quadWidth, quadHeight);
+    sf::FloatRect rectQuad4(boundsMidX, boundsMidY, quadWidth, quadHeight);
 
-        std::unique_ptr<QuadTree> quadTree1 = std::make_unique<QuadTree>();
-        std::unique_ptr<QuadTree> quadTree2 = std::make_unique<QuadTree>();
-        std::unique_ptr<QuadTree> quadTree3 = std::make_unique<QuadTree>();
-        std::unique_ptr<QuadTree> quadTree4 = std::make_unique<QuadTree>();
+    std::unique_ptr<QuadTree> quadTree1 = std::make_unique<QuadTree>();
+    std::unique_ptr<QuadTree> quadTree2 = std::make_unique<QuadTree>();
+    std::unique_ptr<QuadTree> quadTree3 = std::make_unique<QuadTree>();
+    std::unique_ptr<QuadTree> quadTree4 = std::make_unique<QuadTree>();
 
-        int level = (mLevel + 1);
+    int level = (mLevel + 1);
 
-        quadTree1->setBounds(rectQuad1);
-        quadTree2->setBounds(rectQuad2);
-        quadTree3->setBounds(rectQuad3);
-        quadTree4->setBounds(rectQuad4);
+    quadTree1->setBounds(rectQuad1);
+    quadTree2->setBounds(rectQuad2);
+    quadTree3->setBounds(rectQuad3);
+    quadTree4->setBounds(rectQuad4);
 
-        quadTree1->setLevel(level);
-        quadTree2->setLevel(level);
-        quadTree3->setLevel(level);
-        quadTree4->setLevel(level);
+    quadTree1->setLevel(level);
+    quadTree2->setLevel(level);
+    quadTree3->setLevel(level);
+    quadTree4->setLevel(level);
 
-        mChildren.push_back(std::move(quadTree1));
-        mChildren.push_back(std::move(quadTree2));
-        mChildren.push_back(std::move(quadTree3));
-        mChildren.push_back(std::move(quadTree4));
-    }
+    mChildren.push_back(std::move(quadTree1));
+    mChildren.push_back(std::move(quadTree2));
+    mChildren.push_back(std::move(quadTree3));
+    mChildren.push_back(std::move(quadTree4));
 }
 
 std::vector<int> QuadTree::getIndices(Particle* particle)
@@ -123,7 +118,6 @@ std::vector<int> QuadTree::getIndices(Particle* particle)
 
 void QuadTree::insert(Particle* particle)
 {
-    //if (!mChildren.empty())
     if (mHasChildren)
     {
         const sf::FloatRect& particleBounds = particle->getBoundingRect();
@@ -137,9 +131,9 @@ void QuadTree::insert(Particle* particle)
     {
         mObjects.push_back(particle);
 
-        if (mObjects.size() > mMaxObjects && mLevel < mMaxLevel)
+        bool needUseLowerLevel = (mObjects.size() > mMaxObjects && mLevel < mMaxLevel);
+        if (needUseLowerLevel)
         {
-            //split();
             mHasChildren = true;
 
             for (Particle* object : mObjects)
@@ -154,7 +148,6 @@ void QuadTree::insert(Particle* particle)
 
 void QuadTree::retrieve(std::vector<std::vector<Particle*>>& possibleCollisions)
 {
-    //if (mChildren.empty() && !mObjects.empty())
     if (!mHasChildren && mObjects.size() > size_t(1))
     {
         possibleCollisions.push_back(mObjects);

@@ -32,7 +32,7 @@ public:
 
 private:
     int mMaxLevel = 5;
-    int mMaxObjects = 7;
+    size_t mMaxObjects = 7;
     std::vector<std::unique_ptr<QuadTree>> mChildren;
     std::vector<Particle*> mObjects;
     sf::FloatRect mBounds;
