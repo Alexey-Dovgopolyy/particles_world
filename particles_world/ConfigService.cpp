@@ -55,21 +55,8 @@ bool ConfigService::init()
     mCollideRadius = document["collide_dist"].GetFloat();
     mNoForceDistCoef = document["no_force_dist_coef"].GetFloat();
 
-    mDebugConfig.debugP1PosX = document["debug_p1_pos_x"].GetFloat();
-    mDebugConfig.debugP1PosY = document["debug_p1_pos_y"].GetFloat();
-    mDebugConfig.debugP2PosX = document["debug_p2_pos_x"].GetFloat();
-    mDebugConfig.debugP2PosY = document["debug_p2_pos_y"].GetFloat();
-
-    mDebugConfig.debugP1DirX = document["debug_p1_dir_x"].GetFloat();
-    mDebugConfig.debugP1DirY = document["debug_p1_dir_y"].GetFloat();
-    mDebugConfig.debugP2DirX = document["debug_p2_dir_x"].GetFloat();
-    mDebugConfig.debugP2DirY = document["debug_p2_dir_y"].GetFloat();
-
-    mDebugConfig.debugP1Speed = document["debug_p1_speed"].GetFloat();
-    mDebugConfig.debugP2Speed = document["debug_p2_speed"].GetFloat();
-
-    mDebugConfig.debugSpawnPosX = document["debug_spawn_zone_pos_x"].GetFloat();
-    mDebugConfig.debugSpawnPosY = document["debug_spawn_zone_pos_y"].GetFloat();
+    mSpeedIncStep = document["speed_inc_step"].GetFloat();
+    mMaxInitialSpeed = document["max_init_speed"].GetFloat();
 
     return true;
 }
@@ -147,6 +134,16 @@ float ConfigService::getCollideRadius() const
 float ConfigService::getNoForceDistCoef() const
 {
     return mNoForceDistCoef;
+}
+
+float ConfigService::getSpeedIncStep() const
+{
+    return mSpeedIncStep;
+}
+
+float ConfigService::getMaxInitialSpeed() const
+{
+    return mMaxInitialSpeed;
 }
 
 const DebugConfig& ConfigService::getDebugConfig() const

@@ -34,5 +34,7 @@ private:
 
     sf::CircleShape mSpawnZone;
     float mSpawnRadius = 30.f;
+
+    float mInitialParticleSpeed = 0.f;
 };
 

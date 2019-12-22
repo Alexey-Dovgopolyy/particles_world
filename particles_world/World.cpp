@@ -29,6 +29,8 @@ bool World::init()
     ServiceProvider::getCommunicationService()->addListener(MessageType::mouseMoved, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::mouseUp, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::spawnParticle, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::incInitialSpeed, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::decInitialSpeed, this);
 
     mSpawnZone.setRadius(mSpawnRadius);
     mSpawnZone.setFillColor(sf::Color::Transparent);
@@ -101,7 +103,9 @@ size_t World::getParticlesCount() const
 
 void World::handleMessage(MessageType messageType, Message* message)
 {
-    if (messageType == MessageType::mouseWheelMoved)
+    switch (messageType)
+    {
+    case MessageType::mouseWheelMoved:
     {
         if (MessageMouseWheelMove* wheelMessage = dynamic_cast<MessageMouseWheelMove*>(message))
         {
@@ -111,28 +115,22 @@ void World::handleMessage(MessageType messageType, Message* message)
             mSpawnZone.setRadius(mSpawnRadius);
             mSpawnZone.setOrigin(mSpawnRadius, mSpawnRadius);
         }
+
+        break;
     }
 
-    if (messageType == MessageType::mouseDown)
-    {
-
-    }
-
-    if (messageType == MessageType::mouseMoved)
+    case MessageType::mouseMoved:
     {
         if (MessageMouseMove* moveMessage = dynamic_cast<MessageMouseMove*>(message))
         {
             sf::Vector2i mousePos = moveMessage->mMousePos;
             mSpawnZone.setPosition(sf::Vector2f(float(mousePos.x), float(mousePos.y)));
         }
+
+        break;
     }
 
-    if (messageType == MessageType::mouseUp)
-    {
-
-    }
-
-    if (messageType == MessageType::spawnParticle)
+    case MessageType::spawnParticle:
     {
         float spawnPeriod = ServiceProvider::getConfigService()->getParticleSpawnPeriod();
 
@@ -141,6 +139,33 @@ void World::handleMessage(MessageType messageType, Message* message)
             resetUpdateTime();
             createParticle(mSpawnZone.getPosition(), mSpawnRadius);
         }
+
+        break;
+    }
+
+    case MessageType::incInitialSpeed:
+    {
+        float step = ServiceProvider::getConfigService()->getSpeedIncStep();
+        float maxSpeed = ServiceProvider::getConfigService()->getMaxInitialSpeed();
+        mInitialParticleSpeed += step;
+        mInitialParticleSpeed = std::min(maxSpeed, mInitialParticleSpeed);
+
+        break;
+    }
+
+    case MessageType::decInitialSpeed:
+    {
+        float step = ServiceProvider::getConfigService()->getSpeedIncStep();
+        mInitialParticleSpeed -= step;
+        mInitialParticleSpeed = std::max(0.f, mInitialParticleSpeed);
+
+        break;
+    }
+
+    default:
+    {
+        break;
+    }
     }
 }
 
@@ -172,6 +197,8 @@ void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)
     Particle* particle = new Particle();
     particle->setPosition(particlePos);
     particle->setRadius(drawRadius);
+    particle->setDirection(randomVector);
+    particle->setSpeed(mInitialParticleSpeed);
 
     mParticles.push_back(particle);
 }

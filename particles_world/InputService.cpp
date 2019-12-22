@@ -69,6 +69,16 @@ void InputService::processInput()
         {
             mIsMouseInWindow = false;
         }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
+        {
+            ServiceProvider::getCommunicationService()->queueMessage(MessageType::incInitialSpeed, nullptr);
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
+        {
+            ServiceProvider::getCommunicationService()->queueMessage(MessageType::decInitialSpeed, nullptr);
+        }
     }
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && mIsMouseInWindow == true)

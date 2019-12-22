@@ -29,6 +29,9 @@ public:
     float getCollideRadius() const;
     float getNoForceDistCoef() const;
 
+    float getSpeedIncStep() const;
+    float getMaxInitialSpeed() const;
+
     const DebugConfig& getDebugConfig() const;
 
 private:
@@ -65,6 +68,9 @@ private:
 
     float mCollideRadius = 2.f;
     float mNoForceDistCoef = 2.5f;
+
+    float mSpeedIncStep = 5.f;
+    float mMaxInitialSpeed = 50.f;
 
     DebugConfig mDebugConfig;
 };
