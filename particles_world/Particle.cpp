@@ -138,6 +138,14 @@ void Particle::draw()
 // 
 //     window->draw(debugRectangle);
 
+    const int maxSpeed = ServiceProvider::getConfigService()->getMaxInitialSpeed() * 0.7f;
+    const float maxSpeedPercent = std::min(1.f, mSpeed / maxSpeed);
+    const int colorLerp = static_cast<int>(Math::lerp(0, 255, maxSpeedPercent));
+    const int bluePart = 255 - colorLerp;
+
+    //sf::Color circle(colorLerp, 0, 255);
+    sf::Color circle(colorLerp, colorLerp, bluePart);
+    mCircle.setFillColor(circle);
     mCircle.setPosition(mPosition);
     window->draw(mCircle);
 }

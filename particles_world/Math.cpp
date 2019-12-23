@@ -66,3 +66,9 @@ int Math::randomInt(int from, int to)
     int result = dist(rng);
     return result;
 }
+
+float Math::lerp(float min, float max, float percent)
+{
+    float result = min + (max - min) * percent;
+    return result;
+}

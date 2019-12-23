@@ -31,6 +31,9 @@ bool World::init()
     ServiceProvider::getCommunicationService()->addListener(MessageType::spawnParticle, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::incInitialSpeed, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::decInitialSpeed, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::incAllSpeed, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::decAllSpeed, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::allFreeze, this);
 
     mSpawnZone.setRadius(mSpawnRadius);
     mSpawnZone.setFillColor(sf::Color::Transparent);
@@ -158,6 +161,40 @@ void World::handleMessage(MessageType messageType, Message* message)
         float step = ServiceProvider::getConfigService()->getSpeedIncStep();
         mInitialParticleSpeed -= step;
         mInitialParticleSpeed = std::max(0.f, mInitialParticleSpeed);
+
+        break;
+    }
+
+    case MessageType::incAllSpeed:
+    {
+        for (Particle* particle : mParticles)
+        {
+            float speed = particle->getSpeed();
+            speed *= 1.1f;
+            particle->setSpeed(speed);
+        }
+
+        break;
+    }
+
+    case MessageType::decAllSpeed:
+    {
+        for (Particle* particle : mParticles)
+        {
+            float speed = particle->getSpeed();
+            speed *= 0.9f;
+            particle->setSpeed(speed);
+        }
+
+        break;
+    }
+
+    case MessageType::allFreeze:
+    {
+        for (Particle* particle : mParticles)
+        {
+            particle->setSpeed(0.f);
+        }
 
         break;
     }

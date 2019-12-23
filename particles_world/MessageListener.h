@@ -11,7 +11,10 @@ enum class MessageType
     mouseWheelMoved,
     spawnParticle,
     incInitialSpeed,
-    decInitialSpeed
+    decInitialSpeed,
+    incAllSpeed,
+    decAllSpeed,
+    allFreeze
 };
 
 class MessageListener

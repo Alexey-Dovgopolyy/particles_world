@@ -79,6 +79,22 @@ void InputService::processInput()
         {
             ServiceProvider::getCommunicationService()->queueMessage(MessageType::decInitialSpeed, nullptr);
         }
+
+        if (event.type == sf::Event::KeyReleased)
+        {
+            if (event.key.code == sf::Keyboard::Key::Q)
+            {
+                ServiceProvider::getCommunicationService()->queueMessage(MessageType::incAllSpeed, nullptr);
+            }
+            else if (event.key.code == sf::Keyboard::Key::W)
+            {
+                ServiceProvider::getCommunicationService()->queueMessage(MessageType::decAllSpeed, nullptr);
+            }
+            else if (event.key.code == sf::Keyboard::Key::E)
+            {
+                ServiceProvider::getCommunicationService()->queueMessage(MessageType::allFreeze, nullptr);
+            }
+        }
     }
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && mIsMouseInWindow == true)
