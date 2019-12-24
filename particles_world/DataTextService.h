@@ -16,6 +16,7 @@ public:
 
     void setFps(int fps);
     void setUpdateTime(float time);
+    void setInitialSpeed(float initSpeed);
 
 private:
     DataTextService();
@@ -31,6 +32,8 @@ private:
     sf::Text mFps;
     sf::Text mParticlesCount;
     sf::Text mUpdateTime;
+    sf::Text mInitSpeed;
+    sf::Text mEnergy;
 
     sf::Font mFont;
 

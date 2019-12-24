@@ -177,12 +177,6 @@ void PhysicsService::dealWithWalls(std::vector<Particle*>& particles)
 
             mForces[particle] += force.getForceVector();
         }
-
-//         if (isWallHitted)
-//         {
-//             particle->setMoveVector(particle->getMoveVector() * 0.95f);
-//             particle->setPosition(pos);
-//         }
     }
 }
 

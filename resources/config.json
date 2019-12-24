@@ -2,24 +2,24 @@
     "win_size_x": 800,
     "win_size_y": 600,
 
-    "attraction_radius": 4.0,
+    "attraction_radius": 2.7,
     "attraction_coef": 0.6,
 
     "repel_radius": 15.0,
     "repel_coef": 0.02,
 
-    "particle_radius": 7.0,
-    "particle_draw_radius": 7.0,
+    "particle_radius": 4.0,
+    "particle_draw_radius": 4.0,
 
     "gravitation_force": 0.2,
     "particle_spawn_period": 0.05,
 
     "e_coef": 2.0,
-    "repel_power": 9,
-    "attract_power": 3,
+    "repel_power": 12,
+    "attract_power": 6,
 
     "collide_dist": 2.0,
-    "no_force_dist_coef": 2.5,
+    "no_force_dist_coef": 2.4,
 
     "speed_inc_step": 5.0,
     "max_init_speed": 150.0

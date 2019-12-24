@@ -143,8 +143,7 @@ void Particle::draw()
     const int colorLerp = static_cast<int>(Math::lerp(0, 255, maxSpeedPercent));
     const int bluePart = 255 - colorLerp;
 
-    //sf::Color circle(colorLerp, 0, 255);
-    sf::Color circle(colorLerp, colorLerp, bluePart);
+    sf::Color circle(colorLerp, 0, bluePart);
     mCircle.setFillColor(circle);
     mCircle.setPosition(mPosition);
     window->draw(mCircle);

@@ -34,6 +34,7 @@ void DataTextService::draw()
     window->draw(mFps);
     window->draw(mParticlesCount);
     window->draw(mUpdateTime);
+    window->draw(mInitSpeed);
 }
 
 void DataTextService::setFps(int fps)
@@ -48,6 +49,12 @@ void DataTextService::setUpdateTime(float time)
     mUpdateTime.setString(updateStr);
 }
 
+void DataTextService::setInitialSpeed(float initSpeed)
+{
+    std::string initSpeedStr = "Initial speed: " + std::to_string(initSpeed);
+    mInitSpeed.setString(initSpeedStr);
+}
+
 DataTextService::DataTextService()
 {
 
@@ -60,17 +67,27 @@ bool DataTextService::init()
         return false;
     }
 
-    mFps.setFont(mFont);
-    mParticlesCount.setFont(mFont);
-    mUpdateTime.setFont(mFont);
+    std::vector<sf::Text*> texts;
+    texts.push_back(&mFps);
+    texts.push_back(&mParticlesCount);
+    texts.push_back(&mUpdateTime);
+    texts.push_back(&mInitSpeed);
+    texts.push_back(&mEnergy);
 
-    mFps.setCharacterSize(12);
-    mParticlesCount.setCharacterSize(12);
-    mUpdateTime.setCharacterSize(12);
+    for (sf::Text* text : texts)
+    {
+        text->setFont(mFont);
+        text->setCharacterSize(12);
+    }
 
-    mFps.setPosition(10.f, 10.f);
-    mParticlesCount.setPosition(10.f, 24.f);
-    mUpdateTime.setPosition(10.f, 38.f);
+    float textPosStep = 12.f;
+    float textPosY = 10.f;
+
+    for (sf::Text* text : texts)
+    {
+        text->setPosition(10.f, textPosY);
+        textPosY += textPosStep;
+    }
 
     return true;
 }

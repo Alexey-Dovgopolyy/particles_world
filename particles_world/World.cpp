@@ -7,6 +7,7 @@
 #include "ConfigService.h"
 #include "PhysicsService.h"
 #include "WindowService.h"
+#include "DataTextService.h"
 
 #include "SFML/Graphics/Color.hpp"
 
@@ -44,6 +45,8 @@ bool World::init()
     debugInit();
 
     mParticles.reserve(1000);
+
+    ServiceProvider::getDataTextService()->setInitialSpeed(0.f);
 
     return true;
 }
@@ -152,6 +155,7 @@ void World::handleMessage(MessageType messageType, Message* message)
         float maxSpeed = ServiceProvider::getConfigService()->getMaxInitialSpeed();
         mInitialParticleSpeed += step;
         mInitialParticleSpeed = std::min(maxSpeed, mInitialParticleSpeed);
+        ServiceProvider::getDataTextService()->setInitialSpeed(mInitialParticleSpeed);
 
         break;
     }
@@ -161,6 +165,7 @@ void World::handleMessage(MessageType messageType, Message* message)
         float step = ServiceProvider::getConfigService()->getSpeedIncStep();
         mInitialParticleSpeed -= step;
         mInitialParticleSpeed = std::max(0.f, mInitialParticleSpeed);
+        ServiceProvider::getDataTextService()->setInitialSpeed(mInitialParticleSpeed);
 
         break;
     }
