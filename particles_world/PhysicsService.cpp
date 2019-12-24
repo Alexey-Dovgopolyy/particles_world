@@ -143,45 +143,46 @@ void PhysicsService::dealWithWalls(std::vector<Particle*>& particles)
         sf::Vector2f pos = particle->getPosition();
         if (pos.y + particleRad >= height)
         {
-            isWallHitted = true;
-            sf::Vector2f moveVec = particle->getMoveVector();
-            moveVec.y *= -1.f;
-            particle->setMoveVector(moveVec);
-            pos.y = height - particleRad;
+            float forceAmount = (pos.y + particleRad - height);
+            Force force;
+            force.setDirection(sf::Vector2f(0.f, -1.f));
+            force.setAmount(forceAmount);
+
+            mForces[particle] += force.getForceVector();
+        }
+        else if (pos.y - particleRad <= 0.f)
+        {
+            float forceAmount = (pos.y - particleRad);
+            Force force;
+            force.setDirection(sf::Vector2f(0.f, 1.f));
+            force.setAmount(-forceAmount);
+
+            mForces[particle] += force.getForceVector();
+        }
+        else if (pos.x + particleRad >= width)
+        {
+            float forceAmount = (pos.x + particleRad - width);
+            Force force;
+            force.setDirection(sf::Vector2f(-1.f, 0.f));
+            force.setAmount(forceAmount);
+
+            mForces[particle] += force.getForceVector();
+        }
+        else if (pos.x - particleRad <= 0.f)
+        {
+            float forceAmount = (pos.x - particleRad);
+            Force force;
+            force.setDirection(sf::Vector2f(1.f, 0.f));
+            force.setAmount(-forceAmount);
+
+            mForces[particle] += force.getForceVector();
         }
 
-        if (pos.y - particleRad <= 0.f)
-        {
-            isWallHitted = true;
-            sf::Vector2f moveVec = particle->getMoveVector();
-            moveVec.y *= -1.f;
-            particle->setMoveVector(moveVec);
-            pos.y = particleRad;
-        }
-
-        if (pos.x + particleRad >= width)
-        {
-            isWallHitted = true;
-            sf::Vector2f moveVec = particle->getMoveVector();
-            moveVec.x *= -1.f;
-            particle->setMoveVector(moveVec);
-            pos.x = width - particleRad;
-        }
-
-        if (pos.x - particleRad <= 0.f)
-        {
-            isWallHitted = true;
-            sf::Vector2f moveVec = particle->getMoveVector();
-            moveVec.x *= -1.f;
-            particle->setMoveVector(moveVec);
-            pos.x = particleRad;
-        }
-
-        if (isWallHitted)
-        {
-            particle->setMoveVector(particle->getMoveVector() * 0.95f);
-            particle->setPosition(pos);
-        }
+//         if (isWallHitted)
+//         {
+//             particle->setMoveVector(particle->getMoveVector() * 0.95f);
+//             particle->setPosition(pos);
+//         }
     }
 }
 

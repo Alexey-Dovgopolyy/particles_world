@@ -77,8 +77,8 @@ void World::update(float dt)
 
     physics->resolveCollisions();
     physics->applyGravity(mParticles);
-    physics->applyForces();
     physics->dealWithWalls(mParticles);
+    physics->applyForces();
     
     for (Particle* particle : mParticles)
     {
