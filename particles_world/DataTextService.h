@@ -34,6 +34,12 @@ private:
     sf::Text mUpdateTime;
     sf::Text mInitSpeed;
     sf::Text mEnergy;
+    sf::Text mGravity;
+
+    sf::Text mIncSpeed;
+    sf::Text mDecSpeed;
+    sf::Text mFreeze;
+    sf::Text mQuadTree;
 
     sf::Font mFont;
 

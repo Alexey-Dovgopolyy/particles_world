@@ -146,34 +146,34 @@ void PhysicsService::dealWithWalls(std::vector<Particle*>& particles)
             float forceAmount = (pos.y + particleRad - height);
             Force force;
             force.setDirection(sf::Vector2f(0.f, -1.f));
-            force.setAmount(forceAmount);
+            force.setAmount(forceAmount * forceAmount);
 
             mForces[particle] += force.getForceVector();
         }
-        else if (pos.y - particleRad <= 0.f)
+        if (pos.y - particleRad <= 0.f)
         {
             float forceAmount = (pos.y - particleRad);
             Force force;
             force.setDirection(sf::Vector2f(0.f, 1.f));
-            force.setAmount(-forceAmount);
+            force.setAmount(forceAmount * forceAmount);
 
             mForces[particle] += force.getForceVector();
         }
-        else if (pos.x + particleRad >= width)
+        if (pos.x + particleRad >= width)
         {
             float forceAmount = (pos.x + particleRad - width);
             Force force;
             force.setDirection(sf::Vector2f(-1.f, 0.f));
-            force.setAmount(forceAmount);
+            force.setAmount(forceAmount * forceAmount);
 
             mForces[particle] += force.getForceVector();
         }
-        else if (pos.x - particleRad <= 0.f)
+        if (pos.x - particleRad <= 0.f)
         {
             float forceAmount = (pos.x - particleRad);
             Force force;
             force.setDirection(sf::Vector2f(1.f, 0.f));
-            force.setAmount(-forceAmount);
+            force.setAmount(forceAmount * forceAmount);
 
             mForces[particle] += force.getForceVector();
         }

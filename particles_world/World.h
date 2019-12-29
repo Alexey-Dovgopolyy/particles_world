@@ -19,6 +19,7 @@ public:
     void draw();
 
     size_t getParticlesCount() const;
+    float getAverageSpeed() const;
 
     void handleMessage(MessageType messageType, Message* message);
 
@@ -36,5 +37,7 @@ private:
     float mSpawnRadius = 30.f;
 
     float mInitialParticleSpeed = 0.f;
+
+    bool mNeedDrawQuadTree = false;
 };
 

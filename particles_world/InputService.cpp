@@ -94,6 +94,10 @@ void InputService::processInput()
             {
                 ServiceProvider::getCommunicationService()->queueMessage(MessageType::allFreeze, nullptr);
             }
+            else if (event.key.code == sf::Keyboard::Key::R)
+            {
+                ServiceProvider::getCommunicationService()->queueMessage(MessageType::switchQuadTree, nullptr);
+            }
         }
     }
 

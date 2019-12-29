@@ -14,7 +14,9 @@ enum class MessageType
     decInitialSpeed,
     incAllSpeed,
     decAllSpeed,
-    allFreeze
+    allFreeze,
+    allFreezeInRad,
+    switchQuadTree
 };
 
 class MessageListener

@@ -35,6 +35,8 @@ bool World::init()
     ServiceProvider::getCommunicationService()->addListener(MessageType::incAllSpeed, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::decAllSpeed, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::allFreeze, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::allFreezeInRad, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::switchQuadTree, this);
 
     mSpawnZone.setRadius(mSpawnRadius);
     mSpawnZone.setFillColor(sf::Color::Transparent);
@@ -91,7 +93,10 @@ void World::update(float dt)
 
 void World::draw()
 {
-    ServiceProvider::getPhysicsService()->draw();
+    if (mNeedDrawQuadTree)
+    {
+        ServiceProvider::getPhysicsService()->draw();
+    }
 
     sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
     window->draw(mSpawnZone);
@@ -105,6 +110,27 @@ void World::draw()
 size_t World::getParticlesCount() const
 {
     return mParticles.size();
+}
+
+float World::getAverageSpeed() const
+{
+    float result = 0.f;
+
+    if (mParticles.empty())
+    {
+        return result;
+    }
+
+    float speedSum = 0.f;
+    for (Particle* particle : mParticles)
+    {
+        speedSum += particle->getSpeed();
+    }
+
+    size_t particlesCount = getParticlesCount();
+    result = speedSum / particlesCount;
+
+    return result;
 }
 
 void World::handleMessage(MessageType messageType, Message* message)
@@ -204,6 +230,38 @@ void World::handleMessage(MessageType messageType, Message* message)
         break;
     }
 
+    case MessageType::allFreezeInRad:
+    {
+        if (MessageAllFreezeInRadius* freezeMessage = dynamic_cast<MessageAllFreezeInRadius*>(message))
+        {
+            float radius = freezeMessage->mRadius;
+            sf::Vector2f centerPos = freezeMessage->mCenterPos;
+
+            for (Particle* particle : mParticles)
+            {
+                sf::Vector2f particlePos = particle->getPosition();
+                sf::Vector2f vecToParticle = particlePos - centerPos;
+                float quadDistance = Math::vectorLengthQuad(vecToParticle);
+
+                float quadSpawnZoneRad = radius * radius;
+
+                if (quadSpawnZoneRad >= quadDistance)
+                {
+                    particle->setSpeed(0.f);
+                }
+            }
+        }
+
+        break;
+    }
+
+    case MessageType::switchQuadTree:
+    {
+        mNeedDrawQuadTree = !mNeedDrawQuadTree;
+
+        break;
+    }
+
     default:
     {
         break;
@@ -241,6 +299,12 @@ void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)
     particle->setRadius(drawRadius);
     particle->setDirection(randomVector);
     particle->setSpeed(mInitialParticleSpeed);
+
+    if (mInitialParticleSpeed <= 0.1f)
+    {
+        ServiceProvider::getCommunicationService()->queueMessage(MessageType::allFreezeInRad, 
+            new MessageAllFreezeInRadius(mSpawnRadius, mSpawnZone.getPosition()));
+    }
 
     mParticles.push_back(particle);
 }

@@ -47,6 +47,11 @@ float Particle::getRadius() const
 void Particle::setPosition(const sf::Vector2f& position)
 {
     mPosition = position;
+
+    if (mPosition.x < -200.f || mPosition.x >1000.f || mPosition.y < -200.f || mPosition.y > 800.f)
+    {
+        bool stop = true;
+    }
 }
 
 const sf::Vector2f& Particle::getPosition() const
