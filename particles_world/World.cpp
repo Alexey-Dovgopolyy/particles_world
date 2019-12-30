@@ -44,20 +44,11 @@ bool World::init()
     mSpawnZone.setOutlineThickness(1.f);
     mSpawnZone.setOrigin(mSpawnRadius, mSpawnRadius);
 
-    debugInit();
-
     mParticles.reserve(1000);
 
     ServiceProvider::getDataTextService()->setInitialSpeed(0.f);
 
     return true;
-}
-
-void World::debugInit()
-{
-    const DebugConfig& debugConfig = ServiceProvider::getConfigService()->getDebugConfig();
-
-    mSpawnZone.setPosition(debugConfig.debugSpawnPosX, debugConfig.debugSpawnPosY);
 }
 
 void World::cleanup()

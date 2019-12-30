@@ -12,7 +12,6 @@ public:
     ~World();
 
     bool init();
-    void debugInit();
     void cleanup();
 
     void update(float dt);

@@ -125,7 +125,7 @@ bool DataTextService::init()
 
     textPosY = 10.f;
 
-    float windowWidth = ServiceProvider::getConfigService()->getWinSizeX();
+    float windowWidth = static_cast<float>(ServiceProvider::getConfigService()->getWinSizeX());
     float textPosX = windowWidth - 10.f;
 
     for (sf::Text* text : texts)

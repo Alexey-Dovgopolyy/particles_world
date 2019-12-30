@@ -37,10 +37,6 @@ bool ConfigService::init()
     mWindowSizeY = document["win_size_y"].GetInt();
 
     mAttractionRadius = document["attraction_radius"].GetFloat();
-    mAttractionCoef = document["attraction_coef"].GetFloat();
-
-    mRepelRadius = document["repel_radius"].GetFloat();
-    mRepelCoef = document["repel_coef"].GetFloat();
 
     mParticleRadius = document["particle_radius"].GetFloat();
     mParticleDrawRadius = document["particle_draw_radius"].GetFloat();
@@ -74,21 +70,6 @@ int ConfigService::getWinSizeY() const
 float ConfigService::getAttractionRadius() const
 {
     return mAttractionRadius;
-}
-
-float ConfigService::getAttractionCoef() const
-{
-    return mAttractionCoef;
-}
-
-float ConfigService::getRepelRadius() const
-{
-    return mRepelRadius;
-}
-
-float ConfigService::getRepelCoef() const
-{
-    return mRepelCoef;
 }
 
 float ConfigService::getParticleRadius() const
@@ -144,11 +125,6 @@ float ConfigService::getSpeedIncStep() const
 float ConfigService::getMaxInitialSpeed() const
 {
     return mMaxInitialSpeed;
-}
-
-const DebugConfig& ConfigService::getDebugConfig() const
-{
-    return mDebugConfig;
 }
 
 void ConfigService::create()

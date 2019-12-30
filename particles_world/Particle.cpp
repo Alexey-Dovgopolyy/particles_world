@@ -132,18 +132,7 @@ void Particle::draw()
 {
     sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
 
-//     const sf::FloatRect& rect = getBoundingRect();
-    
-//     sf::RectangleShape debugRectangle;
-//     debugRectangle.setFillColor(sf::Color::Transparent);
-//     debugRectangle.setOutlineColor(sf::Color::Green);
-//     debugRectangle.setOutlineThickness(1.f);
-//     debugRectangle.setPosition(sf::Vector2f(rect.left, rect.top));
-//     debugRectangle.setSize(sf::Vector2f(rect.width, rect.height));
-// 
-//     window->draw(debugRectangle);
-
-    const int maxSpeed = ServiceProvider::getConfigService()->getMaxInitialSpeed() * 0.7f;
+    const int maxSpeed = ServiceProvider::getConfigService()->getMaxInitialSpeed();
     const float maxSpeedPercent = std::min(1.f, mSpeed / maxSpeed);
     const int colorLerp = static_cast<int>(Math::lerp(0, 255, maxSpeedPercent));
     const int bluePart = 255 - colorLerp;
