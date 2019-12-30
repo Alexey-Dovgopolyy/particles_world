@@ -20,6 +20,8 @@ public:
     size_t getParticlesCount() const;
     float getAverageSpeed() const;
 
+    int getUpdateTimes() const;
+
     void handleMessage(MessageType messageType, Message* message);
 
 private:
@@ -38,5 +40,7 @@ private:
     float mInitialParticleSpeed = 0.f;
 
     bool mNeedDrawQuadTree = false;
+
+    int mUpdateTimes = 1;
 };
 

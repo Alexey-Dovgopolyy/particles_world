@@ -98,6 +98,14 @@ void InputService::processInput()
             {
                 ServiceProvider::getCommunicationService()->queueMessage(MessageType::switchQuadTree, nullptr);
             }
+            else if (event.key.code == sf::Keyboard::Key::A)
+            {
+                ServiceProvider::getCommunicationService()->queueMessage(MessageType::decTime, nullptr);
+            }
+            else if (event.key.code == sf::Keyboard::Key::S)
+            {
+                ServiceProvider::getCommunicationService()->queueMessage(MessageType::incTime, nullptr);
+            }
         }
     }
 

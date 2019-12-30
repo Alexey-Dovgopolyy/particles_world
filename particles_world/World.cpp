@@ -15,6 +15,8 @@
 #include <cmath>
 #include <random>
 
+static size_t sMaxParticlesCount = 2000;
+
 World::World()
 {
 }
@@ -37,6 +39,8 @@ bool World::init()
     ServiceProvider::getCommunicationService()->addListener(MessageType::allFreeze, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::allFreezeInRad, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::switchQuadTree, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::incTime, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::decTime, this);
 
     mSpawnZone.setRadius(mSpawnRadius);
     mSpawnZone.setFillColor(sf::Color::Transparent);
@@ -44,7 +48,7 @@ bool World::init()
     mSpawnZone.setOutlineThickness(1.f);
     mSpawnZone.setOrigin(mSpawnRadius, mSpawnRadius);
 
-    mParticles.reserve(1000);
+    mParticles.reserve(sMaxParticlesCount);
 
     ServiceProvider::getDataTextService()->setInitialSpeed(0.f);
 
@@ -122,6 +126,11 @@ float World::getAverageSpeed() const
     result = speedSum / particlesCount;
 
     return result;
+}
+
+int World::getUpdateTimes() const
+{
+    return mUpdateTimes;
 }
 
 void World::handleMessage(MessageType messageType, Message* message)
@@ -253,6 +262,20 @@ void World::handleMessage(MessageType messageType, Message* message)
         break;
     }
 
+    case MessageType::incTime:
+    {
+        mUpdateTimes++;
+        mUpdateTimes = std::min(4, mUpdateTimes);
+        break;
+    }
+
+    case MessageType::decTime:
+    {
+        mUpdateTimes--;
+        mUpdateTimes = std::max(1, mUpdateTimes);
+        break;
+    }
+
     default:
     {
         break;
@@ -262,6 +285,11 @@ void World::handleMessage(MessageType messageType, Message* message)
 
 void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)
 {
+    if (mParticles.size() >= sMaxParticlesCount)
+    {
+        return;
+    }
+
     int randomDistance = static_cast<int>(zoneRadius);
 
     float randomX = static_cast<float>(Math::randomInt(0, randomDistance));

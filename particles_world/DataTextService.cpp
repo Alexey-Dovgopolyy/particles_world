@@ -32,6 +32,10 @@ void DataTextService::update(/*float dt*/)
     float averageSpeed = world->getAverageSpeed();
     std::string averageSpeedStr = "Average speed: " + std::to_string(averageSpeed);
     mEnergy.setString(averageSpeedStr);
+
+    int updateTimes = world->getUpdateTimes();
+    std::string times = "Updates per frame: " + std::to_string(updateTimes);
+    mUpdateTimes.setString(times);
 }
 
 void DataTextService::draw()
@@ -44,6 +48,7 @@ void DataTextService::draw()
     window->draw(mInitSpeed);
     window->draw(mEnergy);
     window->draw(mGravity);
+    window->draw(mUpdateTimes);
 
     window->draw(mIncSpeed);
     window->draw(mDecSpeed);
@@ -87,7 +92,7 @@ bool DataTextService::init()
     texts.push_back(&mUpdateTime);
     texts.push_back(&mInitSpeed);
     texts.push_back(&mEnergy);
-    texts.push_back(&mGravity);
+    texts.push_back(&mUpdateTimes);
 
     for (sf::Text* text : texts)
     {
@@ -108,12 +113,14 @@ bool DataTextService::init()
     mDecSpeed.setString("Dec speed by 10% (W)");
     mFreeze.setString("Freeze all particles (E)");
     mQuadTree.setString("On/Off quad tree view (R)");
+    mIncDecTimes.setString("Dec/Inc updates per frame (A/S)");
 
     texts.clear();
     texts.push_back(&mIncSpeed);
     texts.push_back(&mDecSpeed);
     texts.push_back(&mFreeze);
     texts.push_back(&mQuadTree);
+    texts.push_back(&mIncDecTimes);
 
     for (sf::Text* text : texts)
     {

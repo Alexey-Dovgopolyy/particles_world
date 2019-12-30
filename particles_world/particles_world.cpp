@@ -53,15 +53,21 @@ int main()
         sf::Time dt = clock.restart();
         timeSinceLastUpdate += dt;
 
-        while (timeSinceLastUpdate > sTimePerFrame)
+        while (timeSinceLastUpdate >= sTimePerFrame)
         {
             timeSinceLastUpdate -= sTimePerFrame;
 
             inputService->processInput();
             communication->executeAll();
 
+            int times = world->getUpdateTimes();
+
             updateTimer.restart();
-            world->update(sTimePerFrame.asSeconds());
+            for (int i = 0; i < times; i++)
+            {
+                world->update(sTimePerFrame.asSeconds());
+            }
+            
             float updateTime = updateTimer.restart().asSeconds();
             ServiceProvider::getDataTextService()->setUpdateTime(updateTime);
 
