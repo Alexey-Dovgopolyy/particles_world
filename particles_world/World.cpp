@@ -8,6 +8,7 @@
 #include "PhysicsService.h"
 #include "WindowService.h"
 #include "DataTextService.h"
+#include "WorldService.h"
 
 #include "SFML/Graphics/Color.hpp"
 
@@ -42,6 +43,8 @@ bool World::init()
     ServiceProvider::getCommunicationService()->addListener(MessageType::incTime, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::decTime, this);
 
+    initMessageHandlers();
+
     mSpawnZone.setRadius(mSpawnRadius);
     mSpawnZone.setFillColor(sf::Color::Transparent);
     mSpawnZone.setOutlineColor(sf::Color(100, 100, 100));
@@ -53,6 +56,22 @@ bool World::init()
     ServiceProvider::getDataTextService()->setInitialSpeed(0.f);
 
     return true;
+}
+
+void World::initMessageHandlers()
+{
+    mHandlers[MessageType::mouseWheelMoved] = &World::handleMouseWheelMoved;
+    mHandlers[MessageType::mouseMoved] = &World::handleMouseMoved;
+    mHandlers[MessageType::spawnParticle] = &World::handleSpawnParticle;
+    mHandlers[MessageType::incInitialSpeed] = &World::handleIncInitialSpeed;
+    mHandlers[MessageType::decInitialSpeed] = &World::handleDecInitialSpeed;
+    mHandlers[MessageType::incAllSpeed] = &World::handleIncAllSpeed;
+    mHandlers[MessageType::decAllSpeed] = &World::handleDecAllSpeed;
+    mHandlers[MessageType::allFreeze] = &World::handleAllFreeze;
+    mHandlers[MessageType::allFreezeInRad] = &World::handleAllFreezeInRad;
+    mHandlers[MessageType::switchQuadTree] = &World::handleSwitchQuadTree;
+    mHandlers[MessageType::incTime] = &World::handleIncTime;
+    mHandlers[MessageType::decTime] = &World::handleDecTime;
 }
 
 void World::cleanup()
@@ -135,152 +154,152 @@ int World::getUpdateTimes() const
 
 void World::handleMessage(MessageType messageType, Message* message)
 {
-    switch (messageType)
+    auto it = mHandlers.find(messageType);
+    if (it != mHandlers.end())
     {
-    case MessageType::mouseWheelMoved:
+        it->second(message);
+    }
+}
+
+
+void World::handleMouseWheelMoved(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
+
+    if (MessageMouseWheelMove* wheelMessage = dynamic_cast<MessageMouseWheelMove*>(message))
     {
-        if (MessageMouseWheelMove* wheelMessage = dynamic_cast<MessageMouseWheelMove*>(message))
+        bool isZoomIn = wheelMessage->isZoomIn();
+        world->mSpawnRadius += (isZoomIn ? 5.f : -5.f);
+        world->mSpawnRadius = std::max(0.f, world->mSpawnRadius);
+        world->mSpawnZone.setRadius(world->mSpawnRadius);
+        world->mSpawnZone.setOrigin(world->mSpawnRadius, world->mSpawnRadius);
+    }
+}
+
+void World::handleMouseMoved(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
+
+    if (MessageMouseMove* moveMessage = dynamic_cast<MessageMouseMove*>(message))
+    {
+        sf::Vector2i mousePos = moveMessage->mMousePos;
+        world->mSpawnZone.setPosition(sf::Vector2f(float(mousePos.x), float(mousePos.y)));
+    }
+}
+
+void World::handleSpawnParticle(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
+
+    float spawnPeriod = ServiceProvider::getConfigService()->getParticleSpawnPeriod();
+
+    if (world->mUpdateTime > spawnPeriod)
+    {
+        world->resetUpdateTime();
+        world->createParticle(world->mSpawnZone.getPosition(), world->mSpawnRadius);
+    }
+}
+
+void World::handleIncInitialSpeed(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
+
+    float step = ServiceProvider::getConfigService()->getSpeedIncStep();
+    float maxSpeed = ServiceProvider::getConfigService()->getMaxInitialSpeed();
+    world->mInitialParticleSpeed += step;
+    world->mInitialParticleSpeed = std::min(maxSpeed, world->mInitialParticleSpeed);
+    ServiceProvider::getDataTextService()->setInitialSpeed(world->mInitialParticleSpeed);
+}
+
+void World::handleDecInitialSpeed(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
+
+    float step = ServiceProvider::getConfigService()->getSpeedIncStep();
+    world->mInitialParticleSpeed -= step;
+    world->mInitialParticleSpeed = std::max(0.f, world->mInitialParticleSpeed);
+    ServiceProvider::getDataTextService()->setInitialSpeed(world->mInitialParticleSpeed);
+}
+
+void World::handleIncAllSpeed(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
+
+    for (Particle* particle : world->mParticles)
+    {
+        float speed = particle->getSpeed();
+        speed *= 1.1f;
+        particle->setSpeed(speed);
+    }
+}
+
+void World::handleDecAllSpeed(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
+
+    for (Particle* particle : world->mParticles)
+    {
+        float speed = particle->getSpeed();
+        speed *= 0.9f;
+        particle->setSpeed(speed);
+    }
+}
+
+void World::handleAllFreeze(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
+
+    for (Particle* particle : world->mParticles)
+    {
+        particle->setSpeed(0.f);
+    }
+}
+
+void World::handleAllFreezeInRad(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
+
+    if (MessageAllFreezeInRadius* freezeMessage = dynamic_cast<MessageAllFreezeInRadius*>(message))
+    {
+        float radius = freezeMessage->mRadius;
+        sf::Vector2f centerPos = freezeMessage->mCenterPos;
+
+        for (Particle* particle : world->mParticles)
         {
-            bool isZoomIn = wheelMessage->isZoomIn();
-            mSpawnRadius += (isZoomIn ? 5.f : -5.f);
-            mSpawnRadius = std::max(0.f, mSpawnRadius);
-            mSpawnZone.setRadius(mSpawnRadius);
-            mSpawnZone.setOrigin(mSpawnRadius, mSpawnRadius);
-        }
+            sf::Vector2f particlePos = particle->getPosition();
+            sf::Vector2f vecToParticle = particlePos - centerPos;
+            float quadDistance = Math::vectorLengthQuad(vecToParticle);
 
-        break;
-    }
+            float quadSpawnZoneRad = radius * radius;
 
-    case MessageType::mouseMoved:
-    {
-        if (MessageMouseMove* moveMessage = dynamic_cast<MessageMouseMove*>(message))
-        {
-            sf::Vector2i mousePos = moveMessage->mMousePos;
-            mSpawnZone.setPosition(sf::Vector2f(float(mousePos.x), float(mousePos.y)));
-        }
-
-        break;
-    }
-
-    case MessageType::spawnParticle:
-    {
-        float spawnPeriod = ServiceProvider::getConfigService()->getParticleSpawnPeriod();
-
-        if (mUpdateTime > spawnPeriod)
-        {
-            resetUpdateTime();
-            createParticle(mSpawnZone.getPosition(), mSpawnRadius);
-        }
-
-        break;
-    }
-
-    case MessageType::incInitialSpeed:
-    {
-        float step = ServiceProvider::getConfigService()->getSpeedIncStep();
-        float maxSpeed = ServiceProvider::getConfigService()->getMaxInitialSpeed();
-        mInitialParticleSpeed += step;
-        mInitialParticleSpeed = std::min(maxSpeed, mInitialParticleSpeed);
-        ServiceProvider::getDataTextService()->setInitialSpeed(mInitialParticleSpeed);
-
-        break;
-    }
-
-    case MessageType::decInitialSpeed:
-    {
-        float step = ServiceProvider::getConfigService()->getSpeedIncStep();
-        mInitialParticleSpeed -= step;
-        mInitialParticleSpeed = std::max(0.f, mInitialParticleSpeed);
-        ServiceProvider::getDataTextService()->setInitialSpeed(mInitialParticleSpeed);
-
-        break;
-    }
-
-    case MessageType::incAllSpeed:
-    {
-        for (Particle* particle : mParticles)
-        {
-            float speed = particle->getSpeed();
-            speed *= 1.1f;
-            particle->setSpeed(speed);
-        }
-
-        break;
-    }
-
-    case MessageType::decAllSpeed:
-    {
-        for (Particle* particle : mParticles)
-        {
-            float speed = particle->getSpeed();
-            speed *= 0.9f;
-            particle->setSpeed(speed);
-        }
-
-        break;
-    }
-
-    case MessageType::allFreeze:
-    {
-        for (Particle* particle : mParticles)
-        {
-            particle->setSpeed(0.f);
-        }
-
-        break;
-    }
-
-    case MessageType::allFreezeInRad:
-    {
-        if (MessageAllFreezeInRadius* freezeMessage = dynamic_cast<MessageAllFreezeInRadius*>(message))
-        {
-            float radius = freezeMessage->mRadius;
-            sf::Vector2f centerPos = freezeMessage->mCenterPos;
-
-            for (Particle* particle : mParticles)
+            if (quadSpawnZoneRad >= quadDistance)
             {
-                sf::Vector2f particlePos = particle->getPosition();
-                sf::Vector2f vecToParticle = particlePos - centerPos;
-                float quadDistance = Math::vectorLengthQuad(vecToParticle);
-
-                float quadSpawnZoneRad = radius * radius;
-
-                if (quadSpawnZoneRad >= quadDistance)
-                {
-                    particle->setSpeed(0.f);
-                }
+                particle->setSpeed(0.f);
             }
         }
-
-        break;
     }
+}
 
-    case MessageType::switchQuadTree:
-    {
-        mNeedDrawQuadTree = !mNeedDrawQuadTree;
+void World::handleSwitchQuadTree(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
+    world->mNeedDrawQuadTree = !(world->mNeedDrawQuadTree);
+}
 
-        break;
-    }
+void World::handleIncTime(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
 
-    case MessageType::incTime:
-    {
-        mUpdateTimes++;
-        mUpdateTimes = std::min(4, mUpdateTimes);
-        break;
-    }
+    world->mUpdateTimes++;
+    world->mUpdateTimes = std::min(4, world->mUpdateTimes);
+}
 
-    case MessageType::decTime:
-    {
-        mUpdateTimes--;
-        mUpdateTimes = std::max(1, mUpdateTimes);
-        break;
-    }
+void World::handleDecTime(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
 
-    default:
-    {
-        break;
-    }
-    }
+    world->mUpdateTimes--;
+    world->mUpdateTimes = std::max(1, world->mUpdateTimes);
 }
 
 void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)

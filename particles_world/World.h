@@ -3,6 +3,8 @@
 #include "MessageListener.h"
 
 #include <vector>
+#include <map>
+#include <functional>
 
 class World :
     public MessageListener
@@ -12,6 +14,7 @@ public:
     ~World();
 
     bool init();
+    void initMessageHandlers();
     void cleanup();
 
     void update(float dt);
@@ -23,6 +26,19 @@ public:
     int getUpdateTimes() const;
 
     void handleMessage(MessageType messageType, Message* message);
+
+    static void handleMouseWheelMoved(Message* message);
+    static void handleMouseMoved(Message* message);
+    static void handleSpawnParticle(Message* message);
+    static void handleIncInitialSpeed(Message* message);
+    static void handleDecInitialSpeed(Message* message);
+    static void handleIncAllSpeed(Message* message);
+    static void handleDecAllSpeed(Message* message);
+    static void handleAllFreeze(Message* message);
+    static void handleAllFreezeInRad(Message* message);
+    static void handleSwitchQuadTree(Message* message);
+    static void handleIncTime(Message* message);
+    static void handleDecTime(Message* message);
 
 private:
     void createParticle(const sf::Vector2f& zoneCenter, float zoneRadius);
@@ -42,5 +58,7 @@ private:
     bool mNeedDrawQuadTree = false;
 
     int mUpdateTimes = 1;
+
+    std::map<MessageType, std::function<void(Message*)>> mHandlers;
 };
 
