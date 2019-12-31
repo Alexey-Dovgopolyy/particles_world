@@ -18,5 +18,7 @@
     "no_force_dist_coef": 2.4,
 
     "speed_inc_step": 5.0,
-    "max_init_speed": 150.0
+    "max_init_speed": 150.0,
+
+    "max_particles_count": 2000
 }

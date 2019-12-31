@@ -16,8 +16,6 @@
 #include <cmath>
 #include <random>
 
-static size_t sMaxParticlesCount = 2000;
-
 World::World()
 {
 }
@@ -51,7 +49,9 @@ bool World::init()
     mSpawnZone.setOutlineThickness(1.f);
     mSpawnZone.setOrigin(mSpawnRadius, mSpawnRadius);
 
-    mParticles.reserve(sMaxParticlesCount);
+    int maxParticlesCount = ServiceProvider::getConfigService()->getMaxParticlesCount();
+
+    mParticles.reserve(maxParticlesCount);
 
     ServiceProvider::getDataTextService()->setInitialSpeed(0.f);
 
@@ -304,7 +304,9 @@ void World::handleDecTime(Message* message)
 
 void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)
 {
-    if (mParticles.size() >= sMaxParticlesCount)
+    int maxParticlesCount = ServiceProvider::getConfigService()->getMaxParticlesCount();
+
+    if (mParticles.size() >= maxParticlesCount)
     {
         return;
     }

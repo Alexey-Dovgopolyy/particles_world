@@ -28,6 +28,8 @@ public:
     float getSpeedIncStep() const;
     float getMaxInitialSpeed() const;
 
+    int getMaxParticlesCount() const;
+
 private:
     ConfigService();
     ConfigService(const ConfigService& config) = delete;
@@ -45,10 +47,6 @@ private:
     int mWindowSizeY = 600;
 
     float mAttractionRadius = 100.f;
-//     float mAttractionCoef = 0.1f;
-// 
-//     float mRepelRadius = 4.f;
-//     float mRepelCoef = 1.f;
 
     float mParticleRadius = 2.f;
     float mParticleDrawRadius = 2.f;
@@ -65,5 +63,7 @@ private:
 
     float mSpeedIncStep = 5.f;
     float mMaxInitialSpeed = 50.f;
+
+    int mMaxParticlesCount = 2000;
 };
 

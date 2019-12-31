@@ -54,6 +54,8 @@ bool ConfigService::init()
     mSpeedIncStep = document["speed_inc_step"].GetFloat();
     mMaxInitialSpeed = document["max_init_speed"].GetFloat();
 
+    mMaxParticlesCount = document["max_particles_count"].GetInt();
+
     return true;
 }
 
@@ -125,6 +127,11 @@ float ConfigService::getSpeedIncStep() const
 float ConfigService::getMaxInitialSpeed() const
 {
     return mMaxInitialSpeed;
+}
+
+int ConfigService::getMaxParticlesCount() const
+{
+    return mMaxParticlesCount;
 }
 
 void ConfigService::create()
