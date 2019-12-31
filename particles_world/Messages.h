@@ -43,7 +43,7 @@ public:
     MessageSpawnParticle() {}
 };
 
-class MessageAllFreezeInRadius : public Message 
+class MessageAllFreezeInRadius : public Message
 {
 public:
     MessageAllFreezeInRadius(float radius, const sf::Vector2f& centerPos) :
@@ -54,4 +54,20 @@ public:
 public:
     float mRadius = 0.f;
     sf::Vector2f mCenterPos;
+    float mSpeed;
+};
+
+class MessageSetSpeedInRadius : public Message 
+{
+public:
+    MessageSetSpeedInRadius(float radius, const sf::Vector2f& centerPos, float speed) :
+        mRadius(radius),
+        mCenterPos(centerPos),
+        mSpeed(speed)
+    {}
+
+public:
+    float mRadius = 0.f;
+    sf::Vector2f mCenterPos;
+    float mSpeed = 0.f;
 };

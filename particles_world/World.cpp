@@ -40,6 +40,7 @@ bool World::init()
     ServiceProvider::getCommunicationService()->addListener(MessageType::switchQuadTree, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::incTime, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::decTime, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::setSpeedInRad, this);
 
     initMessageHandlers();
 
@@ -72,6 +73,7 @@ void World::initMessageHandlers()
     mHandlers[MessageType::switchQuadTree] = &World::handleSwitchQuadTree;
     mHandlers[MessageType::incTime] = &World::handleIncTime;
     mHandlers[MessageType::decTime] = &World::handleDecTime;
+    mHandlers[MessageType::setSpeedInRad] = &World::handleSetSpeedInRad;
 }
 
 void World::cleanup()
@@ -298,12 +300,41 @@ void World::handleDecTime(Message* message)
     world->mUpdateTimes = std::max(1, world->mUpdateTimes);
 }
 
+void World::handleSetSpeedInRad(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
+
+    if (MessageSetSpeedInRadius* setSpeedMessage = dynamic_cast<MessageSetSpeedInRadius*>(message))
+    {
+        float radius = setSpeedMessage->mRadius;
+        sf::Vector2f centerPos = setSpeedMessage->mCenterPos;
+        float speed = setSpeedMessage->mSpeed;
+
+        for (Particle& particle : world->mParticles)
+        {
+            sf::Vector2f particlePos = particle.getPosition();
+            sf::Vector2f vecToParticle = particlePos - centerPos;
+            float quadDistance = Math::vectorLengthQuad(vecToParticle);
+
+            float quadSpawnZoneRad = radius * radius;
+
+            if (quadSpawnZoneRad >= quadDistance)
+            {
+                particle.setSpeed(speed);
+            }
+        }
+    }
+}
+
 void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)
 {
     size_t maxParticlesCount = static_cast<size_t>(ServiceProvider::getConfigService()->getMaxParticlesCount());
 
     if (mParticles.size() >= maxParticlesCount)
     {
+        ServiceProvider::getCommunicationService()->queueMessage(MessageType::setSpeedInRad,
+            new MessageSetSpeedInRadius(mSpawnRadius, mSpawnZone.getPosition(), mInitialParticleSpeed));
+
         return;
     }
 

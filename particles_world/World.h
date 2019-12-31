@@ -39,6 +39,7 @@ public:
     static void handleSwitchQuadTree(Message* message);
     static void handleIncTime(Message* message);
     static void handleDecTime(Message* message);
+    static void handleSetSpeedInRad(Message* message);
 
 private:
     void createParticle(const sf::Vector2f& zoneCenter, float zoneRadius);

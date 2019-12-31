@@ -16,6 +16,7 @@ enum class MessageType
     decAllSpeed,
     allFreeze,
     allFreezeInRad,
+    setSpeedInRad,
     switchQuadTree,
     incTime,
     decTime
