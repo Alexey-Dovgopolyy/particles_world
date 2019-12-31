@@ -106,6 +106,10 @@ void InputService::processInput()
             {
                 ServiceProvider::getCommunicationService()->queueMessage(MessageType::incTime, nullptr);
             }
+            else if (event.key.code == sf::Keyboard::Key::D)
+            {
+                ServiceProvider::getCommunicationService()->queueMessage(MessageType::switchCreateHeat, nullptr);
+            }
         }
     }
 

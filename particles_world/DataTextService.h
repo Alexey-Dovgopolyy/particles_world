@@ -42,6 +42,7 @@ private:
     sf::Text mFreeze;
     sf::Text mQuadTree;
     sf::Text mIncDecTimes;
+    sf::Text mCreateHeatMode;
 
     sf::Font mFont;
 

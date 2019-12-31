@@ -19,7 +19,8 @@ enum class MessageType
     setSpeedInRad,
     switchQuadTree,
     incTime,
-    decTime
+    decTime,
+    switchCreateHeat
 };
 
 class MessageListener

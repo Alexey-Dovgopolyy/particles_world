@@ -40,6 +40,7 @@ public:
     static void handleIncTime(Message* message);
     static void handleDecTime(Message* message);
     static void handleSetSpeedInRad(Message* message);
+    static void handleSwitchCreateHeat(Message* message);
 
 private:
     void createParticle(const sf::Vector2f& zoneCenter, float zoneRadius);
@@ -57,6 +58,7 @@ private:
     float mInitialParticleSpeed = 0.f;
 
     bool mNeedDrawQuadTree = false;
+    bool mCreateParticlesMode = true;
 
     int mUpdateTimes = 1;
 

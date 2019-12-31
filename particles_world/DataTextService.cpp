@@ -54,6 +54,8 @@ void DataTextService::draw()
     window->draw(mDecSpeed);
     window->draw(mFreeze);
     window->draw(mQuadTree);
+    window->draw(mIncDecTimes);
+    window->draw(mCreateHeatMode);
 }
 
 void DataTextService::setFps(int fps)
@@ -114,6 +116,7 @@ bool DataTextService::init()
     mFreeze.setString("Freeze all particles (E)");
     mQuadTree.setString("On/Off quad tree view (R)");
     mIncDecTimes.setString("Dec/Inc updates per frame (A/S)");
+    mCreateHeatMode.setString("Switch creat/heat mode (D)");
 
     texts.clear();
     texts.push_back(&mIncSpeed);
@@ -121,6 +124,7 @@ bool DataTextService::init()
     texts.push_back(&mFreeze);
     texts.push_back(&mQuadTree);
     texts.push_back(&mIncDecTimes);
+    texts.push_back(&mCreateHeatMode);
 
     for (sf::Text* text : texts)
     {

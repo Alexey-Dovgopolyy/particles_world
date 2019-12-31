@@ -41,6 +41,7 @@ bool World::init()
     ServiceProvider::getCommunicationService()->addListener(MessageType::incTime, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::decTime, this);
     ServiceProvider::getCommunicationService()->addListener(MessageType::setSpeedInRad, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::switchCreateHeat, this);
 
     initMessageHandlers();
 
@@ -74,6 +75,7 @@ void World::initMessageHandlers()
     mHandlers[MessageType::incTime] = &World::handleIncTime;
     mHandlers[MessageType::decTime] = &World::handleDecTime;
     mHandlers[MessageType::setSpeedInRad] = &World::handleSetSpeedInRad;
+    mHandlers[MessageType::switchCreateHeat] = &World::handleSwitchCreateHeat;
 }
 
 void World::cleanup()
@@ -326,11 +328,18 @@ void World::handleSetSpeedInRad(Message* message)
     }
 }
 
+void World::handleSwitchCreateHeat(Message* message)
+{
+    World* world = ServiceProvider::getWorldService()->getWorld();
+
+    world->mCreateParticlesMode = !(world->mCreateParticlesMode);
+}
+
 void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)
 {
     size_t maxParticlesCount = static_cast<size_t>(ServiceProvider::getConfigService()->getMaxParticlesCount());
 
-    if (mParticles.size() >= maxParticlesCount)
+    if (mParticles.size() >= maxParticlesCount || !mCreateParticlesMode)
     {
         ServiceProvider::getCommunicationService()->queueMessage(MessageType::setSpeedInRad,
             new MessageSetSpeedInRadius(mSpawnRadius, mSpawnZone.getPosition(), mInitialParticleSpeed));
