@@ -22,8 +22,8 @@ public:
 
     void applyForces();
     bool interaction(Particle& particle, Particle& other);
-    void dealWithWalls(std::vector<Particle*>& particles);
-    void applyGravity(std::vector<Particle*>& particles);
+    void dealWithWalls(std::vector<Particle>& particles);
+    void applyGravity(std::vector<Particle>& particles);
 
     static bool isParticlesInteract(Particle* particle1, Particle* particle2);
     void collide(Particle& particle1, Particle& particle2);

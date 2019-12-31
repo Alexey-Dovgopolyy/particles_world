@@ -46,7 +46,7 @@ private:
     void resetUpdateTime();
 
 private:
-    std::vector<Particle*> mParticles;
+    std::vector<Particle> mParticles;
 
     float mUpdateTime = 0.f;
 

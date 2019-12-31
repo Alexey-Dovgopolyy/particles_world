@@ -76,10 +76,6 @@ void World::initMessageHandlers()
 
 void World::cleanup()
 {
-    for (Particle* particle : mParticles)
-    {
-        delete particle;
-    }
 }
 
 void World::update(float dt)
@@ -89,9 +85,9 @@ void World::update(float dt)
     PhysicsService* physics = ServiceProvider::getPhysicsService();
     physics->clear();
     
-    for (Particle* particle : mParticles)
+    for (Particle& particle : mParticles)
     {
-        physics->insert(particle);
+        physics->insert(&particle);
     }
 
     physics->resolveCollisions();
@@ -99,9 +95,9 @@ void World::update(float dt)
     physics->dealWithWalls(mParticles);
     physics->applyForces();
     
-    for (Particle* particle : mParticles)
+    for (Particle& particle : mParticles)
     {
-        particle->update(dt);
+        particle.update(dt);
     }
 }
 
@@ -115,9 +111,9 @@ void World::draw()
     sf::RenderWindow* window = ServiceProvider::getWindowService()->getWindow();
     window->draw(mSpawnZone);
 
-    for (Particle* particle : mParticles)
+    for (Particle& particle : mParticles)
     {
-        particle->draw();
+        particle.draw();
     }
 }
 
@@ -136,9 +132,9 @@ float World::getAverageSpeed() const
     }
 
     float speedSum = 0.f;
-    for (Particle* particle : mParticles)
+    for (const Particle& particle : mParticles)
     {
-        speedSum += particle->getSpeed();
+        speedSum += particle.getSpeed();
     }
 
     size_t particlesCount = getParticlesCount();
@@ -225,11 +221,11 @@ void World::handleIncAllSpeed(Message* message)
 {
     World* world = ServiceProvider::getWorldService()->getWorld();
 
-    for (Particle* particle : world->mParticles)
+    for (Particle& particle : world->mParticles)
     {
-        float speed = particle->getSpeed();
+        float speed = particle.getSpeed();
         speed *= 1.1f;
-        particle->setSpeed(speed);
+        particle.setSpeed(speed);
     }
 }
 
@@ -237,11 +233,11 @@ void World::handleDecAllSpeed(Message* message)
 {
     World* world = ServiceProvider::getWorldService()->getWorld();
 
-    for (Particle* particle : world->mParticles)
+    for (Particle& particle : world->mParticles)
     {
-        float speed = particle->getSpeed();
+        float speed = particle.getSpeed();
         speed *= 0.9f;
-        particle->setSpeed(speed);
+        particle.setSpeed(speed);
     }
 }
 
@@ -249,9 +245,9 @@ void World::handleAllFreeze(Message* message)
 {
     World* world = ServiceProvider::getWorldService()->getWorld();
 
-    for (Particle* particle : world->mParticles)
+    for (Particle& particle : world->mParticles)
     {
-        particle->setSpeed(0.f);
+        particle.setSpeed(0.f);
     }
 }
 
@@ -264,9 +260,9 @@ void World::handleAllFreezeInRad(Message* message)
         float radius = freezeMessage->mRadius;
         sf::Vector2f centerPos = freezeMessage->mCenterPos;
 
-        for (Particle* particle : world->mParticles)
+        for (Particle& particle : world->mParticles)
         {
-            sf::Vector2f particlePos = particle->getPosition();
+            sf::Vector2f particlePos = particle.getPosition();
             sf::Vector2f vecToParticle = particlePos - centerPos;
             float quadDistance = Math::vectorLengthQuad(vecToParticle);
 
@@ -274,7 +270,7 @@ void World::handleAllFreezeInRad(Message* message)
 
             if (quadSpawnZoneRad >= quadDistance)
             {
-                particle->setSpeed(0.f);
+                particle.setSpeed(0.f);
             }
         }
     }
@@ -304,7 +300,7 @@ void World::handleDecTime(Message* message)
 
 void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)
 {
-    int maxParticlesCount = ServiceProvider::getConfigService()->getMaxParticlesCount();
+    size_t maxParticlesCount = static_cast<size_t>(ServiceProvider::getConfigService()->getMaxParticlesCount());
 
     if (mParticles.size() >= maxParticlesCount)
     {
@@ -334,19 +330,19 @@ void World::createParticle(const sf::Vector2f& zoneCenter, float zoneRadius)
     float particleRadius = ServiceProvider::getConfigService()->getParticleRadius();
     float drawRadius = ServiceProvider::getConfigService()->getParticleDrawRadius();
 
-    Particle* particle = new Particle();
-    particle->setPosition(particlePos);
-    particle->setRadius(drawRadius);
-    particle->setDirection(randomVector);
-    particle->setSpeed(mInitialParticleSpeed);
+    mParticles.emplace_back();
+    Particle& particle = mParticles.back();
+
+    particle.setPosition(particlePos);
+    particle.setRadius(drawRadius);
+    particle.setDirection(randomVector);
+    particle.setSpeed(mInitialParticleSpeed);
 
     if (mInitialParticleSpeed <= 0.1f)
     {
         ServiceProvider::getCommunicationService()->queueMessage(MessageType::allFreezeInRad, 
             new MessageAllFreezeInRadius(mSpawnRadius, mSpawnZone.getPosition()));
     }
-
-    mParticles.push_back(particle);
 }
 
 void World::accumulateUpdateTime(float dt)

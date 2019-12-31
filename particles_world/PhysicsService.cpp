@@ -129,18 +129,18 @@ bool PhysicsService::interaction(Particle& particle1, Particle& particle2)
     return true;
 }
 
-void PhysicsService::dealWithWalls(std::vector<Particle*>& particles)
+void PhysicsService::dealWithWalls(std::vector<Particle>& particles)
 {
     ConfigService* config = ServiceProvider::getConfigService();
     float width = static_cast<float>(config->getWinSizeX());
     float height = static_cast<float>(config->getWinSizeY());
     float particleRad = config->getParticleRadius();
 
-    for (Particle* particle : particles)
+    for (Particle& particle : particles)
     {
         bool isWallHitted = false;
 
-        sf::Vector2f pos = particle->getPosition();
+        sf::Vector2f pos = particle.getPosition();
         if (pos.y + particleRad >= height)
         {
             float forceAmount = (pos.y + particleRad - height);
@@ -148,7 +148,7 @@ void PhysicsService::dealWithWalls(std::vector<Particle*>& particles)
             force.setDirection(sf::Vector2f(0.f, -1.f));
             force.setAmount(forceAmount * forceAmount);
 
-            mForces[particle] += force.getForceVector();
+            mForces[&particle] += force.getForceVector();
         }
         if (pos.y - particleRad <= 0.f)
         {
@@ -157,7 +157,7 @@ void PhysicsService::dealWithWalls(std::vector<Particle*>& particles)
             force.setDirection(sf::Vector2f(0.f, 1.f));
             force.setAmount(forceAmount * forceAmount);
 
-            mForces[particle] += force.getForceVector();
+            mForces[&particle] += force.getForceVector();
         }
         if (pos.x + particleRad >= width)
         {
@@ -166,7 +166,7 @@ void PhysicsService::dealWithWalls(std::vector<Particle*>& particles)
             force.setDirection(sf::Vector2f(-1.f, 0.f));
             force.setAmount(forceAmount * forceAmount);
 
-            mForces[particle] += force.getForceVector();
+            mForces[&particle] += force.getForceVector();
         }
         if (pos.x - particleRad <= 0.f)
         {
@@ -175,22 +175,22 @@ void PhysicsService::dealWithWalls(std::vector<Particle*>& particles)
             force.setDirection(sf::Vector2f(1.f, 0.f));
             force.setAmount(forceAmount * forceAmount);
 
-            mForces[particle] += force.getForceVector();
+            mForces[&particle] += force.getForceVector();
         }
     }
 }
 
-void PhysicsService::applyGravity(std::vector<Particle*>& particles)
+void PhysicsService::applyGravity(std::vector<Particle>& particles)
 {
     float gravitationForce = ServiceProvider::getConfigService()->getGravitation();
 
-    for (Particle* particle : particles)
+    for (Particle& particle : particles)
     {
         Force gravitation;
         gravitation.setDirection(sf::Vector2f(0.f, 1.f));
         gravitation.setAmount(gravitationForce);
 
-        mForces[particle] += gravitation.getForceVector();
+        mForces[&particle] += gravitation.getForceVector();
     }
 }
 
