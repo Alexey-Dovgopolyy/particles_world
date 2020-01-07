@@ -240,8 +240,8 @@ void PhysicsService::collide(Particle& particle1, Particle& particle2)
     particle1.setMoveVector(newDirection1);
     particle2.setMoveVector(newDirection2);
 
-    particle1.setSpeed(particle1.getSpeed() * 0.995f);
-    particle2.setSpeed(particle2.getSpeed() * 0.995f);
+    //particle1.setSpeed(particle1.getSpeed() * 0.995f);
+    //particle2.setSpeed(particle2.getSpeed() * 0.995f);
 }
 
 sf::Vector2f PhysicsService::calculateReflectVector(const sf::Vector2f& wall, Particle& particle)

@@ -2,7 +2,7 @@
     "win_size_x": 800,
     "win_size_y": 600,
 
-    "attraction_radius": 2.7,
+    "attraction_radius": 3.0,
 
     "particle_radius": 4.0,
     "particle_draw_radius": 4.0,

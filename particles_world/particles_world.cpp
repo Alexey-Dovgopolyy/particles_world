@@ -50,8 +50,10 @@ int main()
 
     while (window->isOpen())
     {
+        float times = static_cast<float>(world->getUpdateTimes());
+
         sf::Time dt = clock.restart();
-        timeSinceLastUpdate += dt;
+        timeSinceLastUpdate += sf::seconds(dt.asSeconds() * times);
 
         while (timeSinceLastUpdate >= sTimePerFrame)
         {
@@ -60,13 +62,8 @@ int main()
             inputService->processInput();
             communication->executeAll();
 
-            int times = world->getUpdateTimes();
-
             updateTimer.restart();
-            for (int i = 0; i < times; i++)
-            {
-                world->update(sTimePerFrame.asSeconds());
-            }
+            world->update(sTimePerFrame.asSeconds());
             
             float updateTime = updateTimer.restart().asSeconds();
             ServiceProvider::getDataTextService()->setUpdateTime(updateTime);
