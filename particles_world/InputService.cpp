@@ -110,6 +110,30 @@ void InputService::processInput()
             {
                 ServiceProvider::getCommunicationService()->queueMessage(MessageType::switchCreateHeat, nullptr);
             }
+            
+            if (event.key.control)
+            {
+                if (event.key.code == sf::Keyboard::Key::Equal)
+                {
+                    ServiceProvider::getCommunicationService()->queueMessage(MessageType::incAttraction, nullptr);
+                }
+                if (event.key.code == sf::Keyboard::Key::Hyphen)
+                {
+                    ServiceProvider::getCommunicationService()->queueMessage(MessageType::decAttraction, nullptr);
+                }
+            }
+
+            if (event.key.shift)
+            {
+				if (event.key.code == sf::Keyboard::Key::Equal)
+				{
+                    ServiceProvider::getCommunicationService()->queueMessage(MessageType::incRepelling, nullptr);
+				}
+				if (event.key.code == sf::Keyboard::Key::Hyphen)
+				{
+                    ServiceProvider::getCommunicationService()->queueMessage(MessageType::decRepelling, nullptr);
+				}
+            }
         }
     }
 

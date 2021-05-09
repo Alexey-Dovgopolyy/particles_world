@@ -4,7 +4,6 @@
 
 #include <vector>
 #include <map>
-#include <functional>
 
 class World :
     public MessageListener
@@ -25,8 +24,9 @@ public:
 
     int getUpdateTimes() const;
 
-    void handleMessage(MessageType messageType, Message* message);
+    //void handleMessage(MessageType messageType, Message* message);
 
+    // TODO set handlers into proper classes
     static void handleMouseWheelMoved(Message* message);
     static void handleMouseMoved(Message* message);
     static void handleSpawnParticle(Message* message);
@@ -62,6 +62,6 @@ private:
 
     int mUpdateTimes = 1;
 
-    std::map<MessageType, std::function<void(Message*)>> mHandlers;
+    //std::map<MessageType, std::function<void(Message*)>> mHandlers;
 };
 

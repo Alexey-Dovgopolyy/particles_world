@@ -152,14 +152,14 @@ int World::getUpdateTimes() const
     return mUpdateTimes;
 }
 
-void World::handleMessage(MessageType messageType, Message* message)
-{
-    auto it = mHandlers.find(messageType);
-    if (it != mHandlers.end())
-    {
-        it->second(message);
-    }
-}
+// void World::handleMessage(MessageType messageType, Message* message)
+// {
+//     auto it = mHandlers.find(messageType);
+//     if (it != mHandlers.end())
+//     {
+//         it->second(message);
+//     }
+// }
 
 
 void World::handleMouseWheelMoved(Message* message)

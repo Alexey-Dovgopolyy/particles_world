@@ -1,6 +1,7 @@
 #include "PhysicsService.h"
 #include "ServiceProvider.h"
 #include "ConfigService.h"
+#include "CommunicationService.h"
 #include "Particle.h"
 
 #include <SFML/Graphics/Rect.hpp>
@@ -88,8 +89,8 @@ bool PhysicsService::interaction(Particle& particle1, Particle& particle2)
     float particleRadius = config->getParticleRadius();
 
     float eCoef = config->getECoef();
-    int repelPow = config->getRepelPow();
-    int attractPow = config->getAttractPow();
+    int repelPow = config->getRepelPow() + mRepelPowDiff;
+    int attractPow = config->getAttractPow() + mAttractPowDiff;
     float attractRadius = config->getAttractionRadius();
     float collideRadius = config->getCollideRadius();
     float noForceDistCoef = config->getNoForceDistCoef();
@@ -136,14 +137,15 @@ void PhysicsService::dealWithWalls(std::vector<Particle>& particles)
     float height = static_cast<float>(config->getWinSizeY());
     float particleRad = config->getParticleRadius();
 
+    // TODO make refactor walls
+
     for (Particle& particle : particles)
     {
-        bool isWallHitted = false;
-
         sf::Vector2f pos = particle.getPosition();
         if (pos.y + particleRad >= height)
         {
             float forceAmount = (pos.y + particleRad - height);
+            forceAmount *= 0.9f;
             Force force;
             force.setDirection(sf::Vector2f(0.f, -1.f));
             force.setAmount(forceAmount * forceAmount);
@@ -153,6 +155,7 @@ void PhysicsService::dealWithWalls(std::vector<Particle>& particles)
         if (pos.y - particleRad <= 0.f)
         {
             float forceAmount = (pos.y - particleRad);
+            forceAmount *= 0.9f;
             Force force;
             force.setDirection(sf::Vector2f(0.f, 1.f));
             force.setAmount(forceAmount * forceAmount);
@@ -162,6 +165,7 @@ void PhysicsService::dealWithWalls(std::vector<Particle>& particles)
         if (pos.x + particleRad >= width)
         {
             float forceAmount = (pos.x + particleRad - width);
+            forceAmount *= 0.9f;
             Force force;
             force.setDirection(sf::Vector2f(-1.f, 0.f));
             force.setAmount(forceAmount * forceAmount);
@@ -171,6 +175,7 @@ void PhysicsService::dealWithWalls(std::vector<Particle>& particles)
         if (pos.x - particleRad <= 0.f)
         {
             float forceAmount = (pos.x - particleRad);
+            forceAmount *= 0.9f;
             Force force;
             force.setDirection(sf::Vector2f(1.f, 0.f));
             force.setAmount(forceAmount * forceAmount);
@@ -192,6 +197,18 @@ void PhysicsService::applyGravity(std::vector<Particle>& particles)
 
         mForces[&particle] += gravitation.getForceVector();
     }
+}
+
+int PhysicsService::getCurrentAttractionPow() const
+{
+	ConfigService* config = ServiceProvider::getConfigService();
+	return config->getAttractPow() + mAttractPowDiff;
+}
+
+int PhysicsService::getCurrentRepelPow() const
+{
+	ConfigService* config = ServiceProvider::getConfigService();
+    return config->getRepelPow() + mRepelPowDiff;
 }
 
 bool PhysicsService::isParticlesInteract(Particle* particle1, Particle* particle2)
@@ -239,9 +256,6 @@ void PhysicsService::collide(Particle& particle1, Particle& particle2)
 
     particle1.setMoveVector(newDirection1);
     particle2.setMoveVector(newDirection2);
-
-    //particle1.setSpeed(particle1.getSpeed() * 0.995f);
-    //particle2.setSpeed(particle2.getSpeed() * 0.995f);
 }
 
 sf::Vector2f PhysicsService::calculateReflectVector(const sf::Vector2f& wall, Particle& particle)
@@ -272,6 +286,16 @@ void PhysicsService::applyForces()
 
 bool PhysicsService::init()
 {
+    ServiceProvider::getCommunicationService()->addListener(MessageType::incAttraction, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::decAttraction, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::incRepelling, this);
+    ServiceProvider::getCommunicationService()->addListener(MessageType::decRepelling, this);
+
+	mHandlers[MessageType::incAttraction] = &PhysicsService::handleIncAttraction;
+	mHandlers[MessageType::decAttraction] = &PhysicsService::handleDecAttraction;
+	mHandlers[MessageType::incRepelling] = &PhysicsService::handleIncRepelling;
+	mHandlers[MessageType::decRepelling] = &PhysicsService::handleDecRepelling;
+
     int width = ServiceProvider::getConfigService()->getWinSizeX();
     int height = ServiceProvider::getConfigService()->getWinSizeY();
 
@@ -283,6 +307,26 @@ bool PhysicsService::init()
     mQuadTree.init();
 
     return true;
+}
+
+void PhysicsService::handleIncAttraction(Message* message)
+{
+    ServiceProvider::getPhysicsService()->mAttractPowDiff++;
+}
+
+void PhysicsService::handleDecAttraction(Message* message)
+{
+	ServiceProvider::getPhysicsService()->mAttractPowDiff--;
+}
+
+void PhysicsService::handleIncRepelling(Message* message)
+{
+    ServiceProvider::getPhysicsService()->mRepelPowDiff++;
+}
+
+void PhysicsService::handleDecRepelling(Message* message)
+{
+    ServiceProvider::getPhysicsService()->mRepelPowDiff--;
 }
 
 void PhysicsService::create()

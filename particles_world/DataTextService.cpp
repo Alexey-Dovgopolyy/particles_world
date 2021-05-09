@@ -3,6 +3,8 @@
 #include "WorldService.h"
 #include "WindowService.h"
 #include "ConfigService.h"
+#include "PhysicsService.h"
+#include "CommunicationService.h"
 
 DataTextService* DataTextService::sInstance = nullptr;
 
@@ -56,6 +58,9 @@ void DataTextService::draw()
     window->draw(mQuadTree);
     window->draw(mIncDecTimes);
     window->draw(mCreateHeatMode);
+
+    window->draw(mAttractPow);
+    window->draw(mRepelPow);
 }
 
 void DataTextService::setFps(int fps)
@@ -76,6 +81,20 @@ void DataTextService::setInitialSpeed(float initSpeed)
     mInitSpeed.setString(initSpeedStr);
 }
 
+void DataTextService::setAttractionPow()
+{
+    int attractionPow = ServiceProvider::getPhysicsService()->getCurrentAttractionPow();
+	std::string str = "Attraction pow: " + std::to_string(attractionPow);
+	mAttractPow.setString(str);
+}
+
+void DataTextService::setRepelPow()
+{
+    int repelPow = ServiceProvider::getPhysicsService()->getCurrentRepelPow();
+	std::string str = "Repel pow: " + std::to_string(repelPow);
+	mRepelPow.setString(str);
+}
+
 DataTextService::DataTextService()
 {
 
@@ -83,6 +102,19 @@ DataTextService::DataTextService()
 
 bool DataTextService::init()
 {
+	ServiceProvider::getCommunicationService()->addListener(MessageType::incAttraction, this);
+	ServiceProvider::getCommunicationService()->addListener(MessageType::decAttraction, this);
+	ServiceProvider::getCommunicationService()->addListener(MessageType::incRepelling, this);
+	ServiceProvider::getCommunicationService()->addListener(MessageType::decRepelling, this);
+
+	mHandlers[MessageType::incAttraction] = &DataTextService::handleIncAttraction;
+	mHandlers[MessageType::decAttraction] = &DataTextService::handleDecAttraction;
+	mHandlers[MessageType::incRepelling] = &DataTextService::handleIncRepelling;
+	mHandlers[MessageType::decRepelling] = &DataTextService::handleDecRepelling;
+
+    setAttractionPow();
+    setRepelPow();
+
     if (!mFont.loadFromFile("Sansation.ttf"))
     {
         return false;
@@ -125,6 +157,8 @@ bool DataTextService::init()
     texts.push_back(&mQuadTree);
     texts.push_back(&mIncDecTimes);
     texts.push_back(&mCreateHeatMode);
+    texts.push_back(&mAttractPow);
+    texts.push_back(&mRepelPow);
 
     for (sf::Text* text : texts)
     {
@@ -146,6 +180,26 @@ bool DataTextService::init()
     }
 
     return true;
+}
+
+void DataTextService::handleIncAttraction(Message* message)
+{
+    ServiceProvider::getDataTextService()->setAttractionPow();
+}
+
+void DataTextService::handleDecAttraction(Message* message)
+{
+    ServiceProvider::getDataTextService()->setAttractionPow();
+}
+
+void DataTextService::handleIncRepelling(Message* message)
+{
+    ServiceProvider::getDataTextService()->setRepelPow();
+}
+
+void DataTextService::handleDecRepelling(Message* message)
+{
+    ServiceProvider::getDataTextService()->setRepelPow();
 }
 
 void DataTextService::create()

@@ -6,7 +6,10 @@
 
 #include <memory>
 
+#include "MessageListener.h"
+
 class DataTextService
+    : public MessageListener
 {
     friend class ServiceProvider;
 
@@ -17,12 +20,19 @@ public:
     void setFps(int fps);
     void setUpdateTime(float time);
     void setInitialSpeed(float initSpeed);
+    void setAttractionPow();
+    void setRepelPow();
 
 private:
     DataTextService();
     DataTextService(const DataTextService& window) = delete;
 
     bool init();
+
+    static void handleIncAttraction(Message* message);
+    static void handleDecAttraction(Message* message);
+    static void handleIncRepelling(Message* message);
+    static void handleDecRepelling(Message* message);
 
     static void create();
     static void cleanup();
@@ -43,6 +53,8 @@ private:
     sf::Text mQuadTree;
     sf::Text mIncDecTimes;
     sf::Text mCreateHeatMode;
+    sf::Text mAttractPow;
+    sf::Text mRepelPow;
 
     sf::Font mFont;
 

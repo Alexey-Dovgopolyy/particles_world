@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Messages.h"
+#include <functional>
+#include <map>
 
 enum class MessageType
 {
@@ -20,11 +22,27 @@ enum class MessageType
     switchQuadTree,
     incTime,
     decTime,
-    switchCreateHeat
+    switchCreateHeat,
+
+    incAttraction,
+    decAttraction,
+
+    incRepelling,
+    decRepelling
 };
 
 class MessageListener
 {
 public:
-    virtual void handleMessage(MessageType messageType, Message* message) = 0;
+    virtual void handleMessage(MessageType messageType, Message* message)
+    {
+		auto it = mHandlers.find(messageType);
+		if (it != mHandlers.end())
+		{
+			it->second(message);
+		}
+    }
+
+protected:
+    std::map<MessageType, std::function<void(Message*)>> mHandlers;
 };
